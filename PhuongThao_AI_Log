@@ -1,0 +1,47 @@
+ENTRY #001
+
+Prompt Type:
+DECISION-MAKING
+
+Stage/Component:
+Algorithms
+
+Problem/Context:
+Hệ thống Emergency Room cần chọn bệnh nhân nguy hiểm nhất để đưa vào phòng cấp cứu trước. Nhóm cần quyết định giữa Queue FIFO thông thường và MinHeap Priority Queue.
+
+Prompt to AI:
+"Trong hệ thống Emergency Room chỉ có 1 phòng cấp cứu, nên dùng Queue FIFO hay MinHeap Priority Queue để xử lý bệnh nhân theo mức độ nguy hiểm? Phân tích complexity và tính phù hợp thực tế."
+
+AI Response (Summary):
+AI đề xuất sử dụng MinHeap vì Queue FIFO chỉ xử lý theo thứ tự đến trước, trong khi hệ thống ER cần ưu tiên bệnh nhân nguy hiểm hơn. AI cũng giải thích thao tác insert và remove trong Heap có complexity O(log n).
+
+Human Delta & Reflection:
+
+- Critical Thinking:
+AI đúng khi đề xuất MinHeap cho triage system. Tuy nhiên phản hồi ban đầu chưa xử lý trường hợp hai bệnh nhân có cùng severity level. Nếu chỉ so sánh severity thì hệ thống sẽ thiếu tính công bằng.
+
+- Contextualization:
+Trong thực tế ER, hai bệnh nhân cùng mức độ nguy hiểm sẽ được xét thêm thời gian đến khám (arrival timestamp). Đây là ràng buộc thực tế mà AI chưa tự suy luận đầy đủ.
+
+- Creative Synthesis:
+Tôi bổ sung cơ chế composite priority:
+(severity, timestamp)
+để Heap trở thành stable priority queue. Điều này giúp hệ thống vừa ưu tiên ca nặng vừa tránh starvation.
+
+- Decision Ownership:
+Tôi quyết định dùng MinHeap thay vì Queue FIFO vì nó phản ánh đúng nghiệp vụ triage của bệnh viện. Queue FIFO chỉ phù hợp cho hệ thống khám thường, không phù hợp emergency scheduling.
+
+- Evidence:
+Comparator trong heapifyUp() và heapifyDown() sử dụng:
+1. severity
+2. timestamp
+
+Test case:
+(1,10:01)
+(1,10:03)
+(2,09:59)
+
+Kết quả pop ra đúng thứ tự theo severity rồi timestamp.
+
+
+============================================================
