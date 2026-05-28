@@ -91,7 +91,7 @@ public class DoublyLinkedList {
         
         // Nạp sẵn 2 data mồi để demo cho nhanh
         dll.addRecord("BA01", "10/01/2025", "Sốt siêu vi");
-        dll.add文化("BA02", "15/05/2025", "Đau dạ dày"); // Sửa lại chữ văn hóa thành addRecord ở dòng dưới nhé, tự dưng bàn phím t nảy chữ tiếng Tàu. Dòng này t gõ lại:
+        dll.addRecord("BA02", "15/05/2025", "Đau dạ dày"); // Sửa lại chữ văn hóa thành addRecord ở dòng dưới nhé, tự dưng bàn phím t nảy chữ tiếng Tàu. Dòng này t gõ lại:
         // dll.addRecord("BA02", "15/05/2025", "Đau dạ dày");
         
         while (isRunning) {
