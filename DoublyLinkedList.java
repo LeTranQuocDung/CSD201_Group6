@@ -88,11 +88,7 @@ public class DoublyLinkedList {
         boolean isRunning = true;
 
         System.out.println("=== HỆ THỐNG LỊCH SỬ BỆNH ÁN (DOUBLY LINKED LIST) ===");
-        
-        // Nạp sẵn 2 data mồi để demo cho nhanh
-        dll.addRecord("BA01", "10/01/2025", "Sốt siêu vi");
-        dll.addRecord("BA02", "15/05/2025", "Đau dạ dày"); // Sửa lại chữ văn hóa thành addRecord ở dòng dưới nhé, tự dưng bàn phím t nảy chữ tiếng Tàu. Dòng này t gõ lại:
-        // dll.addRecord("BA02", "15/05/2025", "Đau dạ dày");
+        System.out.println("[LOG] Hệ thống đã sẵn sàng. Danh sách đang trống.");
         
         while (isRunning) {
             System.out.println("\n================= MENU =================");
