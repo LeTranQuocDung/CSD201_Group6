@@ -1,149 +1,82 @@
-import java.util.Scanner;
-
 public class HashTable {
-
-    private static class Node {
-        String key;
-        String value;
-        Node next;
-
-        public Node(String key, String value) {
-            this.key = key;
-            this.value = value;
-            this.next = null;
-        }
-    }
-
-    private Node[] table;
+    private Node[] buckets;
     private int capacity;
 
+    // Khởi tạo capacity lớn (vd: 2048) để triệt tiêu nhu cầu Rehashing như trong báo cáo
     public HashTable(int capacity) {
         this.capacity = capacity;
-        this.table = new Node[capacity];
+        this.buckets = new Node[capacity];
     }
 
+    // Thuật toán Polynomial Rolling Hash chống đụng độ đảo chữ
     private int hash(String key) {
-        return Math.abs(key.hashCode()) % capacity;
+        long hashVal = 0;
+        for (int i = 0; i < key.length(); i++) {
+            hashVal = (hashVal * 31 + key.charAt(i)) % capacity;
+        }
+        return (int) Math.abs(hashVal); 
     }
 
+    // Hàm Thêm/Cập nhật dữ liệu (Xử lý đụng độ bằng Chaining)
     public void put(String key, String value) {
         int index = hash(key);
         Node newNode = new Node(key, value);
 
-        if (table[index] == null) {
-            table[index] = newNode;
-            System.out.printf("[LOG] Inserted into empty bucket: Key='%s', Value='%s' (index: %d)\n", key, value,
-                    index);
-        } else {
-
-            Node current = table[index];
-
-            while (true) {
-
-                if (current.key.equals(key)) {
-                    current.value = value;
-                    System.out.printf("[LOG] Updated successfully (Duplicate Key): Key='%s', New Value='%s'\n", key,
-                            value);
-                    return;
-                }
-
-                if (current.next == null) {
-                    break;
-                }
-
-                current = current.next;
-            }
-
-            current.next = newNode;
-            System.out.printf("[LOG] Chained successfully (Collision): Key='%s', Value='%s' (index: %d)\n", key, value,
-                    index);
+        if (buckets[index] == null) {
+            buckets[index] = newNode;
+            return;
         }
+
+        Node current = buckets[index];
+        Node prev = null;
+        
+        while (current != null) {
+            if (current.key.equals(key)) {
+                current.value = value; // Cập nhật nếu trùng ID
+                return;
+            }
+            prev = current;
+            current = current.next;
+        }
+        
+        // Nối Node mới vào cuối chuỗi
+        prev.next = newNode;
     }
 
+    // Hàm Lấy dữ liệu
     public String get(String key) {
         int index = hash(key);
-        Node current = table[index];
+        Node current = buckets[index];
 
         while (current != null) {
             if (current.key.equals(key)) {
-                System.out.printf("[LOG] Retrieved successfully: Key='%s' -> Value='%s'\n", key, current.value);
                 return current.value;
             }
             current = current.next;
         }
-
-        System.out.printf("[LOG] Not found: Key='%s'\n", key);
-        return null;
+        return null; // Không tìm thấy
     }
 
-    // ================================================================
-    // MAIN METHOD: Interactive Console Menu
-    // ================================================================
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+    // Hàm Xóa dữ liệu (Sửa lỗi Memory Leak của AI theo chuẩn log của bạn)
+    public boolean remove(String key) {
+        int index = hash(key);
+        Node current = buckets[index];
+        Node prev = null;
 
-        System.out.println("=== HASH TABLE INITIALIZATION ===");
-        System.out.print("Enter the capacity for the hash table: ");
-        int capacity = 5; // Default value
-        try {
-            capacity = Integer.parseInt(scanner.nextLine());
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input format, defaulting to capacity 5.");
-        }
-
-        HashTable ht = new HashTable(capacity);
-        boolean isRunning = true;
-
-        while (isRunning) {
-            System.out.println("\n================= MENU =================");
-            System.out.println("1. Insert or Update data (put)");
-            System.out.println("2. Search data (get)");
-            System.out.println("0. Exit program");
-            System.out.print("Select an option (0-2): ");
-
-            String choiceStr = scanner.nextLine();
-            int choice = -1;
-
-            try {
-                choice = Integer.parseInt(choiceStr);
-            } catch (NumberFormatException e) {
-                System.out.println("Error: Please enter a valid integer!");
-                continue;
+        while (current != null) {
+            if (current.key.equals(key)) {
+                if (prev == null) {
+                    // Xóa ở đầu chuỗi
+                    buckets[index] = current.next;
+                } else {
+                    // Nối tắt qua Node hiện tại để xóa sạch sẽ
+                    prev.next = current.next;
+                }
+                return true; // Xóa thành công
             }
-
-            switch (choice) {
-                case 1:
-                    System.out.print("Enter Key (ID): ");
-                    String key = scanner.nextLine();
-
-                    // Remove leading/trailing spaces
-                    if (key.trim().isEmpty()) {
-                        System.out.println("Error: Key cannot be empty!");
-                        break;
-                    }
-
-                    System.out.print("Enter Value (Data): ");
-                    String value = scanner.nextLine();
-
-                    ht.put(key, value);
-                    break;
-
-                case 2:
-                    System.out.print("Enter Key to search: ");
-                    String searchKey = scanner.nextLine();
-                    ht.get(searchKey);
-                    break;
-
-                case 0:
-                    isRunning = false;
-                    System.out.println("Exiting Hash Table program. Goodbye!");
-                    break;
-
-                default:
-                    System.out.println("Invalid selection. Please choose 0, 1, or 2.");
-            }
+            prev = current;
+            current = current.next;
         }
-
-        scanner.close();
+        return false; // Không tìm thấy ID để xóa
     }
 }
