@@ -1,0 +1,77 @@
+AI AUDIT LOG
+Smart Hospital Patient Triage System
+
+Họ và tên	Trần Quốc Thịnh
+MSSV	QE190140
+Nhóm / Lớp	CSD201
+
+
+ENTRY #001   |   DECISION-MAKING   |   DTC: Decomposition
+
+Bối cảnh	
+Cần chọn cấu trúc dữ liệu phù hợp để quản lý hàng đợi bệnh nhân ER trong hệ thống Triage. Yêu cầu: insert và extract-min phải dưới 50ms, chịu tải 200 cập nhật/phút.
+
+Prompt to AI	
+"So sánh hiệu suất giữa Min-Heap, Sorted Linked List và Unsorted Array khi xử lý ít nhất 200 cập nhật ưu tiên mỗi phút. Cấu trúc nào duy trì insert và extract-min dưới 50ms?"
+
+AI Response
+(Summary)	
+• AI gợi ý Min-Heap là lựa chọn tốt nhất vì insert và extract-min đều đạt O(log n).
+• AI cũng phân tích: Sorted Linked List có extract O(1) nhưng insert O(n); Unsorted Array có insert O(1) nhưng extract O(n).
+• AI kết luận chỉ Min-Heap đảm bảo cả hai thao tác trong O(log n) mà không có nút thắt cổ chai.
+
+Evidence	
+Bảng so sánh complexity 3 cấu trúc, code TriageMinHeap.java với heapIndex tracking.
+
+
+Human Delta & Reflection
+Critical Thinking:  Bạn đúng về phân tích complexity nhưng bỏ sót một điểm quan trọng: updatePriority trong heap cần O(n) để tìm kiếm nếu không lưu heapIndex trong mỗi node. Bạn không đề cập đến kỹ thuật lưu heapIndex trong PatientNode để giảm updatePriority xuống O(log n). Đây là điểm mình phải tự bổ sung.
+Contextualization: Trong môi trường ER thực tế, updatePriority xảy ra liên tục (bác sĩ tái đánh giá bệnh nhân) — nếu O(n) thì với 500 bệnh nhân sẽ là 500 phép so sánh mỗi lần cập nhật, vượt ngưỡng 50ms. AI không xét đến tần suất updatePriority trong thực tế.
+Creative Synthesis: Kết hợp Min-Heap + HashMap<patientID, heapIndex> để tra cứu O(1), cộng với Doubly Linked List nhúng trong PatientNode cho lịch sử y tế 2 chiều. Đây là kiến trúc hybrid không có trong gợi ý ban đầu của AI.
+Decision Ownership: Quyết định dùng Min-Heap array-based (tự cài, không dùng java.util.PriorityQueue) vì yêu cầu bài bắt buộc phải hiểu cơ chế bên trong. Lưu heapIndex trong PatientNode là thêm vào của mình để tối ưu updatePriority.
+
+
+ENTRY #002   DECISION-MAKING   |   DTC: Decomposition
+Bối cảnh	Hệ thống Triage đang dùng Min-Heap để quản lý hàng đợi ưu tiên. Khi gọi updatePriority(patientID, newScore), hệ thống phải quét toàn bộ mảng heap để tìm node theo ID — O(n). Cần giải pháp tăng tốc lookup.
+Prompt to AI	"Trong hệ thống Triage dùng Min-Heap, tôi nên dùng cấu trúc dữ liệu phụ nào để giảm thời gian tìm kiếm bệnh nhân theo patientID từ O(n) xuống O(1)? Hash Table có phải lựa chọn tốt nhất không?"
+AI Response (Summary)	• AI gợi ý dùng HashMap<String, Integer> lưu patientID → heapIndex, kết hợp với Min-Heap.
+• AI giải thích: mỗi khi swap trong heap, phải cập nhật HashMap đồng thời — đây là overhead.
+• AI khẳng định: lookup O(1) avg case, giúp updatePriority giảm từ O(n) xuống O(log n) tổng thể.
+Human Delta & Reflection
+Critical Thinking: AI đúng về HashMap làm lookup layer. Tuy nhiên AI ban đầu gợi ý HashMap<String, Patient> lưu cả object — điều này tạo ra 2 bản sao Patient trong bộ nhớ (1 trong heap array, 1 trong map). Đây là memory waste. Đúng hơn phải là HashMap<String, Integer> lưu index, không lưu object.
+Contextualization: Trong ER thực tế, updatePriority xảy ra liên tục (bác sĩ tái đánh giá). Với 500 bệnh nhân, O(n) scan = 500 phép so sánh mỗi lần. HashMap O(1) lookup + O(log n) heapify = hiệu suất vượt trội trong môi trường tải cao.
+Creative Synthesis: Thiết kế hybrid: Min-Heap (priority queue) + HashMap<patientID, heapIndex> (fast lookup). Khi swap hai node trong heap, phải cập nhật CÙNG LÚC cả hai entry trong HashMap. Đây là điều AI không nhấn mạnh đủ.
+Decision Ownership: Chọn HashMap<String, Integer> — lưu index, không lưu object. Quy tắc bất biến: mỗi khi heap.swap(i,j) được gọi, map.put(heap[i].id, i) và map.put(heap[j].id, j) phải được gọi ngay sau. Vi phạm quy tắc này → map trỏ sai index → bug nghiêm trọng.
+Evidence	Code PatientHashMap.java với swap() đồng bộ HashMap; test case kiểm tra tính nhất quán sau mỗi heap operation.
+
+ENTRY #003   DECISION-MAKING   |   DTC: Pattern Recognition
+Bối cảnh	Cần chọn chiến lược xử lý collision cho Hash Table trong hệ thống Triage. Hai phương án chính: Chaining (Linked List per bucket) và Open Addressing (Linear Probing).
+Prompt to AI	"So sánh Chaining và Linear Probing để xử lý collision trong Hash Table lưu bệnh nhân Triage. Phương án nào phù hợp hơn khi số bệnh nhân thay đổi liên tục (insert/delete liên tục)?"
+AI Response (Summary)	• AI phân tích: Chaining dễ cài đặt, không bị clustering, không cần resize thường xuyên.
+• AI phân tích: Linear Probing cache-friendly hơn (locality), nhưng cần load factor ≤ 0.75.
+• AI khuyến nghị: với workload insert/delete liên tục → Chaining an toàn hơn.
+Human Delta & Reflection
+Critical Thinking: AI đúng về Chaining cho workload động. Tuy nhiên AI không đề cập đến primary clustering trong Linear Probing — khi nhiều key hash vào cùng vùng, probe chain kéo dài gây O(n) worst case. Trong ER, patientID thường có prefix "P" chung → hash values có thể cluster nếu hash function yếu.
+Contextualization: ER có đặc điểm: bệnh nhân nhập/xuất liên tục (insert/delete). Với Linear Probing, delete phải dùng "tombstone" marker — không thực sự xóa slot. Điều này gây degradation theo thời gian nếu không rebuild. Chaining không có vấn đề này: delete chỉ cần unlink node.
+Creative Synthesis: Chọn Chaining với Doubly Linked List per bucket (thay vì Singly LL) — cho phép delete O(1) nếu đã có con trỏ đến node (không cần tìm predecessor). Kết hợp với HashMap<patientID, ListNode*> để xóa trực tiếp mà không cần traverse bucket.
+Decision Ownership: Chọn Chaining. Lý do chính: (1) Delete không cần tombstone, (2) Không bị primary clustering, (3) Load factor linh hoạt hơn. Trade-off chấp nhận được: extra memory cho con trỏ next trong mỗi entry (8 bytes/node với JVM 64-bit).
+Evidence	Bảng so sánh Chaining vs Linear Probing với 5 tiêu chí; code TriageHashTable.java dùng Chaining.
+
+
+
+Tiêu chí	Chaining (Sử dụng Linked List)	Open Addressing (Linear Probing)	Đánh giá với Triage System
+1. Tác động của Gom cụm (Clustering)	Không bị Primary Clustering. Key băm vào cùng bucket chỉ làm dài danh sách.	Bị Primary Clustering. Các ID có chung tiền tố (VD: "P001", "P002") rất dễ gây ra chuỗi probe dài, đẩy chi phí về $O(n)$.	Chaining thắng. Hệ thống y tế thường có quy tắc đặt ID giống nhau, rất dễ gây clustering.
+2. Xử lý thao tác Xóa (Delete)	Xóa vật lý sạch sẽ bằng cách gỡ liên kết (unlink) node.	Phải dùng "Tombstone" (đánh dấu đã xóa). Càng xóa nhiều, hiệu năng tìm kiếm càng giảm sút cho đến khi Rehash toàn bộ.	Chaining thắng. Bệnh nhân ER cập nhật/xuất viện liên tục, dùng tombstone sẽ làm phình bộ nhớ và giảm hiệu năng.
+3. Giới hạn Load Factor	Linh hoạt. Bảng vẫn hoạt động tốt ngay cả khi Load Factor $> 1.0$ (chỉ tốn thêm thời gian duyệt list).	Kém linh hoạt. Bắt buộc phải duy trì Load Factor $\le 0.75$, yêu cầu Resize (chi phí rất đắt) thường xuyên hơn.	Chaining thắng. Tránh được các đợt giật lag (spike lag) do hệ thống phải Resize bảng trong lúc cấp cứu.
+4. Tối ưu bộ nhớ Cache (Locality)	Kém. Các node phân tán lộn xộn trong bộ nhớ Heap.	Tốt. Lưu trữ mảng liên tục, tận dụng tối đa CPU Cache (L1/L2).	Linear Probing thắng. Tuy nhiên, thời gian xử lý thực tế của Chaining vẫn đủ đáp ứng ngưỡng dưới 50ms.
+5. Memory Overhead (Chi phí bộ nhớ)	Tốn thêm bộ nhớ cho con trỏ (Pointer).	Không tốn chi phí con trỏ, chỉ lưu trực tiếp key/value.	Linear Probing thắng. Tuy nhiên, dung lượng RAM dư dả hiện nay khiến nhược điểm của Chaining không đáng kể.
+
+
+
+
+
+
+
+
+
+
