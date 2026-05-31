@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MediCare — Hệ Thống Quản Lý Bệnh Viện</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js"></script>
+</head>
+<body>
+
+  <!-- ========== SIDEBAR ========== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><i class="ph-fill ph-heartbeat"></i></div>
+      <div class="logo-text">
+        <span class="logo-title">MediCare</span>
+        <span class="logo-sub">Hospital System</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-section="dashboard">
+        <i class="ph ph-squares-four"></i>
+        <span>Dashboard</span>
+      </button>
+      <button class="nav-item" data-section="register">
+        <i class="ph ph-user-plus"></i>
+        <span>Đăng ký khám</span>
+      </button>
+      <button class="nav-item" data-section="calling">
+        <i class="ph ph-bell-ringing"></i>
+        <span>Gọi khám</span>
+        <span class="badge" id="waiting-badge">0</span>
+      </button>
+      <button class="nav-item" data-section="search">
+        <i class="ph ph-magnifying-glass"></i>
+        <span>Tìm kiếm</span>
+      </button>
+      <button class="nav-item" data-section="history">
+        <i class="ph ph-clock-counter-clockwise"></i>
+        <span>Lịch sử khám</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <button class="dark-toggle" id="darkToggle" title="Chuyển chế độ tối/sáng">
+        <i class="ph ph-moon" id="darkIcon"></i>
+        <span id="darkLabel">Dark Mode</span>
+      </button>
+      <button class="logout-btn" id="logoutBtn">
+        <i class="ph ph-sign-out"></i>
+        <span>Thoát</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Sidebar overlay (mobile) -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ========== MAIN CONTENT ========== -->
+  <main class="main-content">
+
+    <!-- Top bar -->
+    <header class="topbar">
+      <button class="menu-toggle" id="menuToggle">
+        <i class="ph ph-list"></i>
+      </button>
+      <div class="topbar-title" id="topbarTitle">Dashboard</div>
+      <div class="topbar-right">
+        <div class="topbar-time" id="topbarTime"></div>
+        <div class="avatar">
+          <i class="ph-fill ph-user-circle"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- ===== SECTION: DASHBOARD ===== -->
+    <section class="section active" id="section-dashboard">
+      <div class="section-header">
+        <h1>Tổng quan hệ thống</h1>
+        <p>Chào mừng đến hệ thống quản lý bệnh viện MediCare</p>
+      </div>
+
+      <!-- Stat cards -->
+      <div class="stats-grid">
+        <div class="stat-card stat-total">
+          <div class="stat-icon"><i class="ph-fill ph-users"></i></div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-total">0</span>
+            <span class="stat-label">Tổng bệnh nhân</span>
+          </div>
+          <div class="stat-wave"></div>
+        </div>
+        <div class="stat-card stat-waiting">
+          <div class="stat-icon"><i class="ph-fill ph-hourglass-medium"></i></div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-waiting">0</span>
+            <span class="stat-label">Đang chờ khám</span>
+          </div>
+          <div class="stat-wave"></div>
+        </div>
+        <div class="stat-card stat-examining">
+          <div class="stat-icon"><i class="ph-fill ph-stethoscope"></i></div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-examining">0</span>
+            <span class="stat-label">Đang khám</span>
+          </div>
+          <div class="stat-wave"></div>
+        </div>
+        <div class="stat-card stat-done">
+          <div class="stat-icon"><i class="ph-fill ph-check-circle"></i></div>
+          <div class="stat-info">
+            <span class="stat-value" id="stat-done">0</span>
+            <span class="stat-label">Đã khám xong</span>
+          </div>
+          <div class="stat-wave"></div>
+        </div>
+      </div>
+
+      <!-- Recent patients -->
+      <div class="dashboard-recent">
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="ph ph-clock"></i> Bệnh nhân mới nhất</h3>
+          </div>
+          <div class="recent-list" id="recentList">
+            <div class="empty-state">
+              <i class="ph ph-hospital"></i>
+              <p>Chưa có bệnh nhân nào</p>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3><i class="ph ph-chart-pie"></i> Phân bổ trạng thái</h3>
+          </div>
+          <div class="chart-area" id="chartArea">
+            <canvas id="statusChart" width="260" height="260"></canvas>
+            <div class="chart-legend" id="chartLegend"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION: REGISTER ===== -->
+    <section class="section" id="section-register">
+      <div class="section-header">
+        <h1>Đăng ký khám bệnh</h1>
+        <p>Điền thông tin để đăng ký lịch khám</p>
+      </div>
+
+      <div class="form-container">
+        <div class="card form-card">
+          <div class="form-icon-header">
+            <i class="ph-fill ph-user-plus"></i>
+          </div>
+          <form id="registerForm" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="fullName"><i class="ph ph-user"></i> Họ và tên *</label>
+                <input type="text" id="fullName" placeholder="Nguyễn Văn A" autocomplete="off" />
+                <span class="field-error" id="err-fullName"></span>
+              </div>
+              <div class="form-group">
+                <label for="age"><i class="ph ph-cake"></i> Tuổi *</label>
+                <input type="number" id="age" placeholder="25" min="0" max="150" />
+                <span class="field-error" id="err-age"></span>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label><i class="ph ph-gender-intersex"></i> Giới tính *</label>
+                <div class="radio-group">
+                  <label class="radio-label">
+                    <input type="radio" name="gender" value="Nam" /> Nam
+                  </label>
+                  <label class="radio-label">
+                    <input type="radio" name="gender" value="Nữ" /> Nữ
+                  </label>
+                  <label class="radio-label">
+                    <input type="radio" name="gender" value="Khác" /> Khác
+                  </label>
+                </div>
+                <span class="field-error" id="err-gender"></span>
+              </div>
+              <div class="form-group">
+                <label for="phone"><i class="ph ph-phone"></i> Số điện thoại *</label>
+                <input type="tel" id="phone" placeholder="0912 345 678" autocomplete="off" />
+                <span class="field-error" id="err-phone"></span>
+              </div>
+            </div>
+            <div class="form-group full">
+              <label for="symptoms"><i class="ph ph-heartbeat"></i> Triệu chứng *</label>
+              <textarea id="symptoms" placeholder="Mô tả triệu chứng bệnh nhân đang gặp phải..." rows="4"></textarea>
+              <span class="field-error" id="err-symptoms"></span>
+            </div>
+            <div class="form-group full">
+              <label for="department"><i class="ph ph-buildings"></i> Khoa khám</label>
+              <select id="department">
+                <option value="Nội khoa">Nội khoa</option>
+                <option value="Ngoại khoa">Ngoại khoa</option>
+                <option value="Nhi khoa">Nhi khoa</option>
+                <option value="Sản phụ khoa">Sản phụ khoa</option>
+                <option value="Tai Mũi Họng">Tai Mũi Họng</option>
+                <option value="Da liễu">Da liễu</option>
+                <option value="Tim mạch">Tim mạch</option>
+                <option value="Thần kinh">Thần kinh</option>
+              </select>
+            </div>
+            <button type="submit" class="btn-primary btn-full">
+              <i class="ph ph-paper-plane-tilt"></i>
+              Đăng ký khám
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION: CALLING ===== -->
+    <section class="section" id="section-calling">
+      <div class="section-header">
+        <h1>Gọi khám bệnh</h1>
+        <p>Quản lý hàng chờ và gọi bệnh nhân vào khám</p>
+      </div>
+
+      <!-- Current calling display -->
+      <div class="calling-display" id="callingDisplay">
+        <div class="calling-placeholder">
+          <i class="ph ph-bell-simple-slash"></i>
+          <p>Chưa có bệnh nhân nào đang được gọi</p>
+        </div>
+      </div>
+
+      <!-- Waiting list -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="ph ph-queue"></i> Hàng chờ khám</h3>
+          <span class="count-badge" id="waitingCount">0 bệnh nhân</span>
+        </div>
+        <div class="waiting-list" id="waitingList">
+          <div class="empty-state">
+            <i class="ph ph-smiley"></i>
+            <p>Không có bệnh nhân trong hàng chờ</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION: SEARCH ===== -->
+    <section class="section" id="section-search">
+      <div class="section-header">
+        <h1>Tìm kiếm bệnh nhân</h1>
+        <p>Tra cứu thông tin theo ID hoặc họ tên</p>
+      </div>
+
+      <div class="search-container">
+        <div class="search-box">
+          <i class="ph ph-magnifying-glass"></i>
+          <input type="text" id="searchInput" placeholder="Nhập ID bệnh nhân hoặc họ tên..." />
+          <button class="btn-search" id="searchBtn">Tìm kiếm</button>
+        </div>
+
+        <div class="search-result" id="searchResult"></div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION: HISTORY ===== -->
+    <section class="section" id="section-history">
+      <div class="section-header">
+        <h1>Lịch sử khám bệnh</h1>
+        <p>Danh sách toàn bộ bệnh nhân đã đăng ký</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="ph ph-table"></i> Danh sách bệnh nhân</h3>
+          <div class="header-actions">
+            <div class="filter-group">
+              <select id="filterStatus">
+                <option value="">Tất cả trạng thái</option>
+                <option value="Chờ khám">Chờ khám</option>
+                <option value="Đang khám">Đang khám</option>
+                <option value="Đã khám">Đã khám</option>
+              </select>
+            </div>
+            <button class="btn-danger-outline" id="clearAllBtn">
+              <i class="ph ph-trash"></i> Xóa tất cả
+            </button>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table class="data-table" id="historyTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Họ tên</th>
+                <th>Tuổi</th>
+                <th>Khoa</th>
+                <th>Triệu chứng</th>
+                <th>Trạng thái</th>
+                <th>Thời gian</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="historyBody">
+              <tr>
+                <td colspan="8" class="table-empty">
+                  <i class="ph ph-database"></i>
+                  <p>Chưa có dữ liệu</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========== MODALS ========== -->
+
+  <!-- Success Modal -->
+  <div class="modal-overlay" id="successModal">
+    <div class="modal modal-success">
+      <div class="modal-icon success-icon">
+        <i class="ph-fill ph-check-circle"></i>
+      </div>
+      <h2>Đăng ký thành công!</h2>
+      <div class="patient-id-display">
+        <span>Mã bệnh nhân của bạn</span>
+        <strong id="newPatientId">BN-000000</strong>
+      </div>
+      <p id="successMsg">Vui lòng ghi nhớ mã bệnh nhân để tra cứu thông tin.</p>
+      <button class="btn-primary" id="closeSuccessModal">
+        <i class="ph ph-check"></i> Xác nhận
+      </button>
+    </div>
+  </div>
+
+  <!-- Calling Modal -->
+  <div class="modal-overlay" id="callingModal">
+    <div class="modal modal-calling">
+      <div class="call-animation">
+        <div class="call-ring ring1"></div>
+        <div class="call-ring ring2"></div>
+        <div class="call-ring ring3"></div>
+        <div class="call-icon-center">
+          <i class="ph-fill ph-bell-ringing"></i>
+        </div>
+      </div>
+      <h2>Đang gọi bệnh nhân...</h2>
+      <div class="calling-info">
+        <p id="callingName">Nguyễn Văn A</p>
+        <span id="callingId">BN-000000</span>
+      </div>
+      <p class="calling-sub">Vui lòng đến phòng khám ngay!</p>
+    </div>
+  </div>
+
+  <!-- Logout Confirm Modal -->
+  <div class="modal-overlay" id="logoutModal">
+    <div class="modal modal-confirm">
+      <div class="modal-icon warning-icon">
+        <i class="ph-fill ph-sign-out"></i>
+      </div>
+      <h2>Xác nhận thoát</h2>
+      <p>Bạn có chắc muốn thoát khỏi hệ thống không?</p>
+      <div class="modal-actions">
+        <button class="btn-outline" id="cancelLogout">
+          <i class="ph ph-x"></i> Hủy
+        </button>
+        <button class="btn-danger" id="confirmLogout">
+          <i class="ph ph-sign-out"></i> Thoát
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirm Modal -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal modal-confirm">
+      <div class="modal-icon danger-icon">
+        <i class="ph-fill ph-trash"></i>
+      </div>
+      <h2>Xóa bệnh nhân</h2>
+      <p id="deleteMsg">Bạn có chắc muốn xóa bệnh nhân này không?</p>
+      <div class="modal-actions">
+        <button class="btn-outline" id="cancelDelete">
+          <i class="ph ph-x"></i> Hủy
+        </button>
+        <button class="btn-danger" id="confirmDelete">
+          <i class="ph ph-trash"></i> Xóa
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Loading Screen -->
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loading-content">
+      <div class="loading-logo">
+        <i class="ph-fill ph-heartbeat"></i>
+      </div>
+      <div class="loading-bar"><div class="loading-bar-fill"></div></div>
+      <p>Đang tải hệ thống...</p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
