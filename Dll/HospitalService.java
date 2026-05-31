@@ -72,12 +72,6 @@ public class HospitalService {
     }
 
     /* ══════════════════════════════════════════════════════════
-       TRA CỨU — HashTable tốt hơn, nhưng DLL findById() O(n)
-       ══════════════════════════════════════════════════════════ */
-    public Patient searchById(String id)     { return historyList.findById(id); }
-    public Patient searchByName(String name) { return historyList.findByName(name); }
-
-    /* ══════════════════════════════════════════════════════════
        LỊCH SỬ — duyệt ngược DLL (mới nhất trước)
        ══════════════════════════════════════════════════════════ */
     public List<Patient> getHistory()          { return historyList.toListReverse(); }
