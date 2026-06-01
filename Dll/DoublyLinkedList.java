@@ -413,7 +413,7 @@ public class DoublyLinkedList {
         }
         line.append(" -> null");
         System.out.println(line);
-        System.out.printf("  %s^HEAD%n", rep(' ', 9));
+        System.out.printf("  %s^HEAD%n", buildRepeat('-', 98));
     }
 
     /**
@@ -423,7 +423,7 @@ public class DoublyLinkedList {
         System.out.println();
         System.out.printf("  %-3s %-12s %-22s %-5s %-16s %-16s %-18s%n",
             "STT", "ID", "Ho ten", "Tuoi", "Uu tien", "Trang thai", "Dang ky luc");
-        System.out.println("  " + rep('-', 98));
+        System.out.println("  " + buildRepeat('-', 98));
 
         DLLNode cur = head;
         int idx = 1;
@@ -435,14 +435,14 @@ public class DoublyLinkedList {
             cur = cur.next;
             idx++;
         }
-        System.out.println("  " + rep('-', 98));
+        System.out.println("  " + buildRepeat('-', 98));
         System.out.printf("  Tong: %d benh nhan%n", size);
     }
-    // ── Helper: tương thích Java 8 (thay thế String.repeat()) ──
-    private static String rep(char c, int n) {
+
+    // ── Helper: tương thích Java 8 (thay String.repeat) ─────
+    private static String buildRepeat(char c, int n) {
         char[] arr = new char[n];
         java.util.Arrays.fill(arr, c);
         return new String(arr);
     }
-
 }
