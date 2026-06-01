@@ -2,20 +2,22 @@
 classDiagram
     direction LR
     
-    class Node {
+    class DoctorNode {
         +String doctorName
-        +Node next
-        +Node(String doctorName)
+        +DoctorNode next
+        +DoctorNode(String doctorName)
     }
 
     class CircularLinkedList {
-        -Node head
-        -Node tail
-        -Node current
+        -DoctorNode head
+        -DoctorNode tail
+        -DoctorNode current
         -int size
         +CircularLinkedList()
-        +addDoctor(String name)
+        +addDoctor(String name) void
         +nextDoctor() String
         +getSize() int
+        +main(String[] args) static void
     }
-```
+
+ ```
