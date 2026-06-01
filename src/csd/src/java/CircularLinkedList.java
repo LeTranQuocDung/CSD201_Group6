@@ -1,23 +1,23 @@
 /**
- * Node class representing a single Doctor node in the Circular Linked List.
+ * DoctorNode class representing a single doctor node in the Circular Linked List.
  */
-class Node {
+class DoctorNode {
     String doctorName;
-    Node next;
+    DoctorNode next;
 
-    public Node(String doctorName) {
+    public DoctorNode(String doctorName) {
         this.doctorName = doctorName;
         this.next = null;
     }
 }
 
 /**
- * CircularLinkedList (CLL) implementation for Doctor Shift/Triage Rotation.
+ * Circular Linked List (CLL) implementation for coordinating continuous doctor shifts.
  */
 public class CircularLinkedList {
-    private Node head;
-    private Node tail;
-    private Node current; // Cursor to track current doctor on shift
+    private DoctorNode head;
+    private DoctorNode tail;
+    private DoctorNode current; // Cursor to track the current doctor on shift
     private int size;
 
     public CircularLinkedList() {
@@ -27,45 +27,30 @@ public class CircularLinkedList {
         this.size = 0;
     }
 
-    /**
-     * Adds a new doctor to the circular linked list.
-     * Maintain tail.next = head circular property.
-     */
     public void addDoctor(String name) {
-        Node newNode = new Node(name);
+        DoctorNode newNode = new DoctorNode(name);
 
         if (head == null) {
-            // Case 1: Empty list
             head = newNode;
             tail = newNode;
-            newNode.next = head; // Point to itself
-            current = head;      // Set cursor to head
+            newNode.next = head; // Self-loop for the first node
+            current = head;      
         } else {
-            // Case 2: Nodes already exist
             tail.next = newNode;
             tail = newNode;
-            tail.next = head;    // CRITICAL: Ngắt nối vòng tròn ở đây (point tail back to head)
+            // CRITICAL POINT: Lock the circular reference here
+            tail.next = head;    
         }
         size++;
     }
 
-    /**
-     * Fetches current doctor, slides cursor to the next doctor node.
-     * Wraps around automatically due to the tail.next = head configuration.
-     * @return Doctor's name, or null if list is empty
-     */
     public String nextDoctor() {
         if (current == null) {
-            return null; // Safe check for empty doctor list
+            return null; // Defensive programming: Prevent server crash if the list is empty
         }
 
-        // 1. Capture the doctor's name under the cursor
         String activeDoctor = current.doctorName;
-
-        // 2. Advance the cursor to the next node (handles wrap-around automatically)
-        current = current.next;
-
-        // 3. Return the active doctor
+        current = current.next; // Slide the cursor to the next doctor
         return activeDoctor;
     }
 
@@ -73,21 +58,23 @@ public class CircularLinkedList {
         return this.size;
     }
 
-    /**
-     * Quick main method to demonstrate Phase 1 requirement:
-     * Add A, B, C. Call next 4 times -> expected A, B, C, A.
-     */
+    // ==========================================
+    // MAIN METHOD FOR TESTING
+    // ==========================================
     public static void main(String[] args) {
         CircularLinkedList cll = new CircularLinkedList();
-        cll.addDoctor("A");
-        cll.addDoctor("B");
-        cll.addDoctor("C");
 
-        System.out.println("--- Test 4 next Doctor calls (Expected: A, B, C, A) ---");
+        // Add 3 doctors to the list
+        cll.addDoctor("Doctor A");
+        cll.addDoctor("Doctor B");
+        cll.addDoctor("Doctor C");
+
+        System.out.println("Total doctors on shift: " + cll.getSize());
+        System.out.println("--- Starting shift rotation (Expected: A -> B -> C -> A) ---");
+
+        // Call nextDoctor 4 times to prove the cursor wraps around back to A
         for (int i = 1; i <= 4; i++) {
             System.out.println("Call #" + i + ": " + cll.nextDoctor());
         }
     }
 }
-// Code updated to force NetBeans automatic compile-on-save.
-
