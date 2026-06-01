@@ -11,9 +11,9 @@ class TriageMinHeap {
 
     + TriageMinHeap(capacity: int )
     + swap(i: int, j: int ) void
-    + heapifyUp(index: int ) void
-    + heapifyDown(index: int ) void
-    + findIndex(patientID: String ) int
+    - heapifyUp(index: int ) void
+    - heapifyDown(index: int ) void
+    - findIndex(patientID: String ) int
     + push(node: PatientNode ) void
     + pop() PatientNode
     + updatePriority(patientID: String,  newScore: int) void
