@@ -1,15 +1,16 @@
 ``` mermaid
 graph TD
     %% Buoc 1: Dang ky va luu tru tuan tu
-    Start([Start]) --> Register[1. Register & Triage]
-    Register --> CreatePatient[Create Patient Object & Assign Priority 1-4]
-    CreatePatient --> AddCache[Save to HashTable 'patientCache']
+    Start([Start]) --> Register[1. Register]
+    Register --> CreatePatient[Assign Priority 1-4]
+    CreatePatient --> AddCache[Save to HashTable ]
     
     %% Chuyen thang tu HashTable sang Queue thay vi tach nhanh
-    AddCache --> PushMinHeap[Insert into TriageMinHeap 'triageQueue']
+    AddCache --> PushMinHeap[Insert into TriageMinHeap ]
 
     %% Buoc 2: Kiem tra hang doi
-    PushMinHeap --> CheckQueue{Is 'triageQueue' Empty?}
+    PushMinHeap --> PopMinHeap[Call Patient]
+    PopMinHeap --> CheckQueue{Is 'triageQueue' Empty?}
     
     CheckQueue -- Yes: Wait for New Patients --> Register
     
@@ -20,9 +21,9 @@ graph TD
     GetDoctor --> UpdateStatus[Update Status to EXAMINING & Assign Room]
 
     %% Buoc 4: Kiem tra hoan thanh
-    UpdateStatus --> Complete{Is Examination Completed?}
+    UpdateStatus --> Complete{Is Status DONE?}
     
-    Complete -- Yes --> MoveToHistory[Set Status to DONE & Move to DoublyLinkedList]
+    Complete -- Yes --> MoveToHistory[Move to DoublyLinkedList]
     MoveToHistory --> End([End])
     
     %% Quay lai kiem tra hang doi neu can phan loai lai
