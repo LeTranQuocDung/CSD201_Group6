@@ -152,3 +152,4 @@ public class TriageMinHeap {
     public boolean isEmpty() { return this.size == 0; }
     public int     getSize() { return this.size; }
 }
+
