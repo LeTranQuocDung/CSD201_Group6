@@ -25,17 +25,16 @@ class TriageMinHeap {
 
 
 class PatientNode {
+    - data: Patient
     - patientID: String
     - priorityScore: int
     - timestamp: long
 
-
-    + PatientNode(patientID: String,  priorityScore: int)
+    + PatientNode(data: Patient)
     + getPatientID() String
     + getPriorityScore() int
-    + setPriorityScore(score: int) void
+    + setPriorityScore(priority: int) void
     + getTimestamp() long
-    + setTimestamp() void
     + hasHigherUrgencyThan(other: PatientNode) boolean
     + toString() String
 }
