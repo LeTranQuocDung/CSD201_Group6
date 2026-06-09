@@ -1,20 +1,20 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author PHUONGTHAO
- */
+///*
+// * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+// * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+// */
+//
+///**
+// *
+// * @author PHUONGTHAO
+// */
 public class Patient {
 
     /* ── Hằng số mức ưu tiên ─────────────────────────────────
        Số CÀNG NHỎ → ưu tiên CÀNG CAO trong MinHeap            */
-    public static final int PRIORITY_NGUY_HIEM      = 1; // Nguy hiểm
-    public static final int PRIORITY_NGHIEM_TRONG   = 2; // Nghiêm trọng
-    public static final int PRIORITY_TRUNG_BINH     = 3; // Trung bình
-    public static final int PRIORITY_NHE            = 4; // Nhẹ
+    public static final int PRIORITY_EMERGENCY = 1; // Emergency
+    public static final int PRIORITY_URGENT   = 2; // Urgent
+    public static final int PRIORITY_NORMAL   = 3; // Normal
+    public static final int PRIORITY_MILD     = 4; // Mild
 
     /* ── Hằng số trạng thái ──────────────────────────────────*/
     public static final String STATUS_WAITING   = "waiting";
@@ -28,7 +28,6 @@ public class Patient {
     private final String gender;        // Giới tính
     private final String phone;         // Số điện thoại
     private final String symptom;       // Triệu chứng
-    private final int    priority;      // Mức ưu tiên 1-4
     private final String registeredAt;  // Thời điểm đăng ký (dùng tie-breaker trong Heap)
 
     // Các field thay đổi theo trạng thái
@@ -37,6 +36,7 @@ public class Patient {
     private String completedAt; // Thời điểm hoàn thành khám
     private String doctor;      // Tên bác sĩ phụ trách
     private String room;        // Phòng khám
+    private int    priority;      // Mức ưu tiên 1-4
 
     /* ── Constructor ─────────────────────────────────────────*/
     public Patient(String id, String name, int age,
@@ -50,7 +50,7 @@ public class Patient {
         this.phone        = phone;
         this.symptom      = symptom;
         this.priority     = (priority >= 1 && priority <= 4)
-                            ? priority : PRIORITY_TRUNG_BINH;
+                            ? priority : PRIORITY_NORMAL;
         this.status       = STATUS_WAITING;
         this.registeredAt = java.time.LocalDateTime.now()
                             .format(java.time.format.DateTimeFormatter
@@ -60,20 +60,21 @@ public class Patient {
         this.doctor       = null;
         this.room         = null;
     }
-/* ── Getters ─────────────────────────────────────────────*/
-    public String getId()           { return this.id; }
-    public String getName()         { return this.name; }
-    public int    getAge()          { return this.age; }
-    public String getGender()       { return this.gender; }
-    public String getPhone()        { return this.phone; }
-    public String getSymptom()      { return this.symptom; }
-    public int    getPriority()     { return this.priority; }
-    public String getRegisteredAt() { return this.registeredAt; }
-    public String getStatus()       { return this.status; }
-    public String getCalledAt()     { return this.calledAt; }
-    public String getCompletedAt()  { return this.completedAt; }
-    public String getDoctor()       { return this.doctor; }
-    public String getRoom()         { return this.room; }
+
+    /* ── Getters ─────────────────────────────────────────────*/
+public String getId()           { return id; }
+    public String getName()         { return name; }
+    public int    getAge()          { return age; }
+    public String getGender()       { return gender; }
+    public String getPhone()        { return phone; }
+    public String getSymptom()      { return symptom; }
+    public int    getPriority()     { return priority; }
+    public String getRegisteredAt() { return registeredAt; }
+    public String getStatus()       { return status; }
+    public String getCalledAt()     { return calledAt; }
+    public String getCompletedAt()  { return completedAt; }
+    public String getDoctor()       { return doctor; }
+    public String getRoom()         { return room; }
 
     /* ── Setters (chỉ field có thể thay đổi) ─────────────────*/
     public void setStatus(String status)    { this.status      = status; }
@@ -81,15 +82,15 @@ public class Patient {
     public void setCompletedAt(String t)    { this.completedAt = t; }
     public void setDoctor(String doctor)    { this.doctor      = doctor; }
     public void setRoom(String room)        { this.room        = room; }
-
+    public void setPriority(int priority)   { this.priority    = priority; }
     /* ── Nhãn mức ưu tiên ────────────────────────────────────*/
     public String getPriorityLabel() {
         switch (priority) {
-            case PRIORITY_NGUY_HIEM:    return "[!!!] Nguy hiem";
-            case PRIORITY_NGHIEM_TRONG: return "[!! ] Nghiem trong";
-            case PRIORITY_TRUNG_BINH:   return "[ ! ] Trung binh";
-            case PRIORITY_NHE:          return "[   ] Nhe";
-            default:                    return "Khong xac dinh";
+            case PRIORITY_EMERGENCY: return "[!!!] Emergency";
+            case PRIORITY_URGENT:    return "[!! ] Urgent";
+            case PRIORITY_NORMAL:    return "[ ! ] Normal";
+            case PRIORITY_MILD:      return "[   ] Mild";
+            default:                 return "Unknown";
         }
     }
 
@@ -113,11 +114,11 @@ public class Patient {
        Ưu tiên cao hơn = priority nhỏ hơn.
        Nếu bằng nhau → ai đăng ký TRƯỚC được gọi trước (FIFO). */
     public boolean hasHigherPriorityThan(Patient other) {
-if (this.priority != other.priority) {
+        if (this.priority != other.priority) {
             return this.priority < other.priority;
         }
         // Tie-breaker: thời gian đăng ký sớm hơn thắng
-        return this.registeredAt.compareTo(other.registeredAt) < 0;
+return this.registeredAt.compareTo(other.registeredAt) < 0;
     }
 
     /* ── toString ────────────────────────────────────────────*/
@@ -125,7 +126,7 @@ if (this.priority != other.priority) {
     public String toString() {
         return String.format(
             "%-12s | %-22s | %3d | %-18s | %-14s | %s",
-            this.id, this.name, this.age, getPriorityLabel(), getStatusLabel(), this.registeredAt
+            id, name, age, getPriorityLabel(), getStatusLabel(), registeredAt
         );
     }
 }
