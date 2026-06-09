@@ -28,13 +28,11 @@ class PatientNode {
     - data: Patient
     - patientID: String
     - priorityScore: int
-    - timestamp: long
 
     + PatientNode(data: Patient)
     + getPatientID() String
     + getPriorityScore() int
     + setPriorityScore(priority: int) void
-    + getTimestamp() long
     + hasHigherUrgencyThan(other: PatientNode) boolean
     + toString() String
 }
