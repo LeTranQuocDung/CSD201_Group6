@@ -8,7 +8,7 @@ public class HashTable {
     private HashNode[] buckets;
     private int capacity;
 
-    // Khởi tạo capacity lớn (vd: 2048) để giảm thiểu đụng độ
+    // Khởi tạo capacity lớn để giảm thiểu đụng độ
     public HashTable(int capacity) {
         this.capacity = capacity;
         this.buckets = new HashNode[capacity];
@@ -20,7 +20,7 @@ public class HashTable {
         for (int i = 0; i < key.length(); i++) {
             hashVal = (hashVal * 31 + key.charAt(i)) % capacity;
         }
-        return (int) Math.abs(hashVal); 
+        return (int) Math.abs(hashVal);
     }
 
     // Hàm Thêm/Cập nhật dữ liệu
@@ -35,7 +35,7 @@ public class HashTable {
 
         HashNode current = buckets[index];
         HashNode prev = null;
-        
+
         while (current != null) {
             if (current.key.equals(key)) {
                 current.value = value; // Cập nhật nếu trùng khóa ID
@@ -44,8 +44,7 @@ public class HashTable {
             prev = current;
             current = current.next;
         }
-        
-        // Nối Node mới vào cuối chuỗi
+
         prev.next = newNode;
     }
 
@@ -72,17 +71,15 @@ public class HashTable {
         while (current != null) {
             if (current.key.equals(key)) {
                 if (prev == null) {
-                    // Xóa ở đầu chuỗi
                     buckets[index] = current.next;
                 } else {
-                    // Nối tắt qua Node hiện tại để xóa
-                    prev.next = current.next;
+                    prev.next = current.next; // noi tat bo qua node current hien tai
                 }
-                return true; // Xóa thành công
+                return true;
             }
             prev = current;
             current = current.next;
         }
-        return false; // Không tìm thấy ID để xóa
+        return false;
     }
 }
