@@ -11,20 +11,15 @@ flowchart TD
     Start --> OpenSystem --> MainMenu
 
     MainMenu -->|Register Patient| RegisterPatient[Register Patient]
-    MainMenu -->|Conduct Initial Assessment| AssessPriority[/Input priority 1-4/]
     MainMenu -->|Call or Allocate Patient| CallPatient[Call Patient]
     MainMenu -->|Override Priority| OverridePriority[Override Priority]
-    MainMenu -->|Order Diagnostic Tests| OrderTests[Order Diagnostic Tests]
     MainMenu -->|Monitor Priority Queue| MonitorQueue[Monitor Priority Queue]
     MainMenu -->|Search Patient| SearchPatient[Search Patient]
     MainMenu -->|View History| ViewHistory[View History]
     MainMenu -->|Delete Patient| DeletePatient[Delete Patient]
     MainMenu -->|Exit| End([End])
 
-    AssessPriority --> ValidPriority{Priority valid?}
-    ValidPriority -->|No| PriorityError[/Show invalid priority message/]
-    PriorityError --> MainMenu
-    ValidPriority -->|Yes| RegisterPatient
+
 
     RegisterPatient --> Registered[/Patient registered and waiting/]
     Registered --> MainMenu
@@ -35,8 +30,6 @@ flowchart TD
     OverridePriority --> PriorityUpdated[/Priority queue updated/]
     PriorityUpdated --> MainMenu
 
-    OrderTests --> RecordUpdated[/Medical information updated/]
-    RecordUpdated --> MainMenu
 
     MonitorQueue --> QueueShown[/Display waiting patients by priority/]
     QueueShown --> MainMenu
@@ -73,7 +66,7 @@ flowchart TD
 
 Register flow chay tuan tu: `Register Patient` dai dien cho nghiep vu dang ky benh nhan. Ben trong implementation hien tai, luong nay duoc map voi `HospitalService.register`, `DoublyLinkedList.push`, `HashTable.put` va `TriageMinHeap.push`.
 
-## 3. Flowchart Call Patient / Allocate Bed
+## 3. Flowchart Call Patient 
 
 ```mermaid
 flowchart TD
@@ -132,7 +125,7 @@ Trong flow he thong, `Reorder priority queue` dai dien cho viec heap tu can bang
 flowchart TD
     Start([Start Search Patient])
     InputSearch[/Input patient ID/]
-    SearchLookup[Search in Patient Lookup]
+    SearchLookup[Search in Hash Table]
     Found{Patient found?}
 
     Start --> InputSearch --> SearchLookup --> Found
