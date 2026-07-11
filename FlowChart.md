@@ -99,11 +99,11 @@ flowchart TD
 
 Flow nay gom use case `Allocate Bed by Priority` va `Call Patient`, vi ca hai deu lay benh nhan uu tien cao nhat tu priority queue, sau do phan cong bac si theo vong lap. Implementation tuong ung: `TriageMinHeap.pop`, `CircularLinkedList.nextDoctor` hoac `HospitalService.nextDoctor`, va `DoublyLinkedList.updateStatus`.
 
-## 4. Flowchart Override Priority
+## 4. Flowchart Update Priority
 
 ```mermaid
 flowchart TD
-    Start([Start Override Priority])
+    Start([Start Update Priority])
     InputPriority[/Input patient ID and new priority/]
     ValidatePriority{Priority in range 1-4?}
 
@@ -124,26 +124,7 @@ flowchart TD
 
 Trong flow he thong, `Reorder priority queue` dai dien cho viec heap tu can bang lai. Chi tiet `heapifyUp` hay `heapifyDown` thuoc flow thuat toan cua `TriageMinHeap`, khong dat trong flow tong quan.
 
-## 5. Flowchart Order Diagnostic Tests
 
-```mermaid
-flowchart TD
-    Start([Start Order Diagnostic Tests])
-    DoctorInput[/Emergency Physician inputs diagnostic request/]
-    FindPatient[Find patient by ID]
-    Found{Patient found?}
-
-    Start --> DoctorInput --> FindPatient --> Found
-    Found -->|No| NotFound[/Show patient not found message/]
-    NotFound --> ReturnMenu([Return Main Menu])
-
-    Found -->|Yes| AddTest[Add diagnosis, test, prescription, or note]
-    AddTest --> UpdateRecord[Update patient record]
-    UpdateRecord --> ShowResult[/Show record updated message/]
-    ShowResult --> ReturnMenu
-```
-
-Use case nay dung mot flow rieng, tranh lap lai `Order Tests` o nhieu vi tri trong flow tong quan.
 
 ## 6. Flowchart Search Patient
 
