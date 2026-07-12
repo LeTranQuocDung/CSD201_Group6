@@ -7,9 +7,9 @@ import java.util.List;
  */
 public class DoublyLinkedList {
 
-    private DLLNode head; // Con trỏ đầu danh sách
+    private DLLNode head; // Con trỏ đầu danh sáchA
     private DLLNode tail; // Con trỏ cuối danh sách
-    private int     size; // Số node hiện có
+    private int size; // Số node hiện có
 
     public DoublyLinkedList() {
         this.head = null;
@@ -29,7 +29,7 @@ public class DoublyLinkedList {
         } else {
             node.prev = tail;
             tail.next = node;
-            tail      = node;
+            tail = node;
         }
 
         size++;
@@ -48,7 +48,7 @@ public class DoublyLinkedList {
         } else {
             node.next = head;
             head.prev = node;
-            head      = node;
+            head = node;
         }
 
         size++;
@@ -60,7 +60,8 @@ public class DoublyLinkedList {
      */
     public boolean deleteById(String id) {
         DLLNode node = findNodeById(id);
-        if (node == null) return false;
+        if (node == null)
+            return false;
 
         if (node.prev != null) {
             node.prev.next = node.next;
@@ -85,7 +86,8 @@ public class DoublyLinkedList {
      * Xóa node ở ĐẦU danh sách — O(1)
      */
     public Patient popHead() {
-        if (head == null) return null;
+        if (head == null)
+            return null;
 
         Patient data = head.data;
 
@@ -93,7 +95,7 @@ public class DoublyLinkedList {
             head = null;
             tail = null;
         } else {
-            head      = head.next;
+            head = head.next;
             head.prev = null;
         }
 
@@ -105,7 +107,8 @@ public class DoublyLinkedList {
      * Xóa node ở CUỐI danh sách — O(1)
      */
     public Patient popTail() {
-        if (tail == null) return null;
+        if (tail == null)
+            return null;
 
         Patient data = tail.data;
 
@@ -113,7 +116,7 @@ public class DoublyLinkedList {
             head = null;
             tail = null;
         } else {
-            tail      = tail.prev;
+            tail = tail.prev;
             tail.next = null;
         }
 
@@ -124,7 +127,8 @@ public class DoublyLinkedList {
     private DLLNode findNodeById(String id) {
         DLLNode cur = head;
         while (cur != null) {
-            if (cur.data.getId().equals(id)) return cur;
+            if (cur.data.getId().equals(id))
+                return cur;
             cur = cur.next;
         }
         return null;
@@ -148,9 +152,11 @@ public class DoublyLinkedList {
     }
 
     public Patient getByIndex(int index) {
-        if (index < 0 || index >= size) return null;
+        if (index < 0 || index >= size)
+            return null;
         DLLNode cur = head;
-        for (int i = 0; i < index; i++) cur = cur.next;
+        for (int i = 0; i < index; i++)
+            cur = cur.next;
         return cur.data;
     }
 
@@ -159,19 +165,24 @@ public class DoublyLinkedList {
      */
     public boolean updateStatus(String id, String status, String doctor, String room) {
         Patient p = findById(id);
-        if (p == null) return false;
+        if (p == null)
+            return false;
 
         String now = java.time.LocalDateTime.now()
-                     .format(java.time.format.DateTimeFormatter
-                     .ofPattern("HH:mm:ss dd/MM/yyyy"));
+                .format(java.time.format.DateTimeFormatter
+                        .ofPattern("HH:mm:ss dd/MM/yyyy"));
 
         if (status != null) {
             p.setStatus(status);
-            if (Patient.STATUS_EXAMINING.equals(status)) p.setCalledAt(now);
-            if (Patient.STATUS_DONE.equals(status))      p.setCompletedAt(now);
+            if (Patient.STATUS_EXAMINING.equals(status))
+                p.setCalledAt(now);
+            if (Patient.STATUS_DONE.equals(status))
+                p.setCompletedAt(now);
         }
-        if (doctor != null) p.setDoctor(doctor);
-        if (room   != null) p.setRoom(room);
+        if (doctor != null)
+            p.setDoctor(doctor);
+        if (room != null)
+            p.setRoom(room);
 
         return true;
     }
@@ -200,7 +211,8 @@ public class DoublyLinkedList {
         List<Patient> result = new ArrayList<>();
         DLLNode cur = head;
         while (cur != null) {
-            if (cur.data.getStatus().equals(status)) result.add(cur.data);
+            if (cur.data.getStatus().equals(status))
+                result.add(cur.data);
             cur = cur.next;
         }
         return result;
@@ -210,20 +222,27 @@ public class DoublyLinkedList {
         List<Patient> result = new ArrayList<>();
         DLLNode cur = head;
         while (cur != null) {
-            if (cur.data.getPriority() == priority) result.add(cur.data);
+            if (cur.data.getPriority() == priority)
+                result.add(cur.data);
             cur = cur.next;
         }
         return result;
     }
 
     public int[] countByStatus() {
-        int[] counts = {0, 0, 0};
+        int[] counts = { 0, 0, 0 };
         DLLNode cur = head;
         while (cur != null) {
             switch (cur.data.getStatus()) {
-                case Patient.STATUS_WAITING:   counts[0]++; break;
-                case Patient.STATUS_EXAMINING: counts[1]++; break;
-                case Patient.STATUS_DONE:      counts[2]++; break;
+                case Patient.STATUS_WAITING:
+                    counts[0]++;
+                    break;
+                case Patient.STATUS_EXAMINING:
+                    counts[1]++;
+                    break;
+                case Patient.STATUS_DONE:
+                    counts[2]++;
+                    break;
             }
             cur = cur.next;
         }
@@ -238,10 +257,21 @@ public class DoublyLinkedList {
         return new Navigator(tail);
     }
 
-    public int     getSize()  { return size; }
-    public boolean isEmpty()  { return size == 0; }
-    public Patient getHead()  { return head != null ? head.data : null; }
-    public Patient getTail()  { return tail != null ? tail.data : null; }
+    public int getSize() {
+        return size;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    public Patient getHead() {
+        return head != null ? head.data : null;
+    }
+
+    public Patient getTail() {
+        return tail != null ? tail.data : null;
+    }
 
     public void clear() {
         head = null;
@@ -258,35 +288,47 @@ public class DoublyLinkedList {
 
         StringBuilder line = new StringBuilder("  null <- ");
         DLLNode cur = head;
-        while (cur != null) {
+        int count = 0;
+        int limit = 10;
+        while (cur != null && count < limit) {
             Patient p = cur.data;
             line.append("[").append(p.getId())
-                .append(": ").append(p.getName())
-                .append(" | ").append(p.getStatusLabel())
-                .append("]");
-            if (cur.next != null) line.append(" <-> ");
+                    .append(": ").append(p.getName())
+                    .append(" | ").append(p.getStatusLabel())
+                    .append("]");
+            if (cur.next != null && count < limit - 1)
+                line.append(" <-> ");
             cur = cur.next;
+            count++;
         }
-        line.append(" -> null");
+        if (cur != null) {
+            line.append(" <-> ... [va ").append(size - limit).append(" benh nhan khac] -> null");
+        } else {
+            line.append(" -> null");
+        }
         System.out.println(line);
-        System.out.printf("  %s^HEAD%n", buildRepeat('-', 98));
+        System.out.printf("  %s^HEAD%n", buildRepeat('-', Math.min(line.length(), 98)));
     }
 
     public void printTable() {
         System.out.println();
         System.out.printf("  %-3s %-12s %-22s %-5s %-16s %-16s %-18s%n",
-            "STT", "ID", "Ho ten", "Tuoi", "Uu tien", "Trang thai", "Dang ky luc");
+                "STT", "ID", "Ho ten", "Tuoi", "Uu tien", "Trang thai", "Dang ky luc");
         System.out.println("  " + buildRepeat('-', 98));
 
         DLLNode cur = head;
         int idx = 1;
-        while (cur != null) {
+        int limit = 20;
+        while (cur != null && idx <= limit) {
             Patient p = cur.data;
             System.out.printf("  %-3d %-12s %-22s %-5d %-16s %-16s %-18s%n",
-                idx, p.getId(), p.getName(), p.getAge(),
-                p.getPriorityLabel(), p.getStatusLabel(), p.getRegisteredAt());
+                    idx, p.getId(), p.getName(), p.getAge(),
+                    p.getPriorityLabel(), p.getStatusLabel(), p.getRegisteredAt());
             cur = cur.next;
             idx++;
+        }
+        if (cur != null) {
+            System.out.printf("  ... (va %d benh nhan khac o sau) ...%n", size - limit);
         }
         System.out.println("  " + buildRepeat('-', 98));
         System.out.printf("  Tong: %d benh nhan%n", size);

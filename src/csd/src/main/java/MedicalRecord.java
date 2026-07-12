@@ -14,8 +14,8 @@ public class MedicalRecord {
     private String prescription;
     private String notes;
 
-    public MedicalRecord(String recordId, String patientId, String doctorId, 
-                         String diagnosis, String prescription, String notes) {
+    public MedicalRecord(String recordId, String patientId, String doctorId,
+            String diagnosis, String prescription, String notes) {
         this.recordId = recordId;
         this.patientId = patientId;
         this.doctorId = doctorId;
@@ -26,31 +26,66 @@ public class MedicalRecord {
     }
 
     // Getters and Setters
-    public String getRecordId() { return recordId; }
-    public void setRecordId(String recordId) { this.recordId = recordId; }
+    public String getRecordId() {
+        return recordId;
+    }
 
-    public String getPatientId() { return patientId; }
-    public void setPatientId(String patientId) { this.patientId = patientId; }
+    public void setRecordId(String recordId) {
+        this.recordId = recordId;
+    }
 
-    public String getDoctorId() { return doctorId; }
-    public void setDoctorId(String doctorId) { this.doctorId = doctorId; }
+    public String getPatientId() {
+        return patientId;
+    }
 
-    public Date getVisitDate() { return visitDate; }
-    public void setVisitDate(Date visitDate) { this.visitDate = visitDate; }
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
+    }
+
+    public String getDoctorId() {
+        return doctorId;
+    }
+
+    public void setDoctorId(String doctorId) {
+        this.doctorId = doctorId;
+    }
+
+    public Date getVisitDate() {
+        return visitDate;
+    }
+
+    public void setVisitDate(Date visitDate) {
+        this.visitDate = visitDate;
+    }
 
     public String getFormattedVisitDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
         return sdf.format(visitDate);
     }
 
-    public String getDiagnosis() { return diagnosis; }
-    public void setDiagnosis(String diagnosis) { this.diagnosis = diagnosis; }
+    public String getDiagnosis() {
+        return diagnosis;
+    }
 
-    public String getPrescription() { return prescription; }
-    public void setPrescription(String prescription) { this.prescription = prescription; }
+    public void setDiagnosis(String diagnosis) {
+        this.diagnosis = diagnosis;
+    }
 
-    public String getNotes() { return notes; }
-    public void setNotes(String notes) { this.notes = notes; }
+    public String getPrescription() {
+        return prescription;
+    }
+
+    public void setPrescription(String prescription) {
+        this.prescription = prescription;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
 
     @Override
     public String toString() {
