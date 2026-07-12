@@ -19,6 +19,10 @@ public class Main {
         service.register("BN-0003", "Le Hoang Yen", 62, "Nu", "0961234569", "Sot cao co giat", 2);
         service.register("BN-0004", "Pham Minh Duc", 18, "Nam", "0951234570", "Zon chan thuong nhe", 4);
 
+        System.out.println("[SYSTEM] Tu dong sinh va dang ky 1.000.000 benh nhan de chay kiem thu...");
+        SampleDataGenerator.generate(service, 1000000);
+        System.out.println("[SYSTEM] Khoi tao hoan tat! Chuan bi vao Menu.\n");
+
         System.out.println("==========================================================================");
         System.out.println("  HE THONG PHAN LOAI & DIEU PHOI BENH NHAN CAP CUU THONG MINH (INTEGRATED)");
         System.out.println("  Tuong thich 100% So do lop: Min-Heap, Hash Table, Doubly & Circular Linked List");
@@ -52,13 +56,17 @@ public class Main {
                 case 1: // Đăng ký
                     String id;
                     while (true) {
-                        System.out.print("Nhap ID benh nhan: ");
+                        System.out.print("Nhap ID benh nhan (de trong de tu dong sinh ID): ");
                         id = scanner.nextLine().trim();
-                        if (id.matches("^[a-zA-Z0-9]+$")) {
+                        if (id.isEmpty()) {
+                            id = "auto";
+                            break;
+                        }
+                        if (id.matches("^[a-zA-Z0-9-]+$")) {
                             break;
                         }
                         System.out.println(
-                                "[LOI] ID chi duoc chua chu cai va so, khong chua ky tu dac biet hoac khoang trang. Vui long nhap lai!");
+                                "[LOI] ID chi duoc chua chu cai, so va dau gach ngang. Vui long nhap lai!");
                     }
 
                     String name;
@@ -274,11 +282,15 @@ public class Main {
                     if (arr.length == 0) {
                         System.out.println("  │  [Hang doi rong]");
                     } else {
-                        for (int i = 0; i < arr.length; i++) {
+                        int limit = Math.min(arr.length, 20);
+                        for (int i = 0; i < limit; i++) {
                             String marker = (i == 0) ? " ← GOC (Uu tien nhat)" : "";
                             System.out.printf("  │  [%2d] %-6s | priority=%d | ho_ten=%s%s%n",
                                     i, arr[i].getPatientID(), arr[i].getPriorityScore(),
                                     service.searchTriage(arr[i].getPatientID()).getName(), marker);
+                        }
+                        if (arr.length > limit) {
+                            System.out.printf("  │  ... (va %d benh nhan khac dang cho trong hang doi) ...%n", arr.length - limit);
                         }
                     }
                     System.out.println("  └────────────────────────────────\n");

@@ -63,8 +63,12 @@ public class HospitalService {
     }
 
     private String generateId() {
-        patientCounter++;
-        return String.format("BN-%04d", patientCounter);
+        String generatedId;
+        do {
+            patientCounter++;
+            generatedId = String.format("BN-%04d", patientCounter);
+        } while (patientCache.get(generatedId) != null);
+        return generatedId;
     }
 
     /* ══════════════════════════════════════════════════════════
@@ -72,6 +76,24 @@ public class HospitalService {
        ══════════════════════════════════════════════════════════ */
     public Patient register(String id, String name, int age, String gender,
                              String phone, String symptom, int priority) {
+        if (id == null || id.trim().isEmpty() || id.equalsIgnoreCase("auto")) {
+            id = generateId();
+        } else {
+            // Đồng bộ patientCounter nếu ID nhập thủ công có dạng BN-xxxx
+            if (id.startsWith("BN-")) {
+                try {
+                    int num = Integer.parseInt(id.substring(3));
+                    if (num > patientCounter) {
+                        patientCounter = num;
+                    }
+                } catch (NumberFormatException ignored) {}
+            }
+            // Kiểm tra trùng lặp ID
+            if (patientCache.get(id) != null) {
+                throw new IllegalArgumentException("ID benh nhan '" + id + "' da ton tai trong he thong!");
+            }
+        }
+
         Patient p = new Patient(id, name, age, gender, phone, symptom, priority);
 
         historyList.push(p);
