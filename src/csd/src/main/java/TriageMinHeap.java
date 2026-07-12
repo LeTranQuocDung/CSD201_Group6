@@ -66,6 +66,12 @@ public class TriageMinHeap {
         return -1;
     }
 
+    public PatientNode getPatientNode(String patientID) {
+        int idx = findIndex(patientID);
+        if (idx != -1) return this.heap[idx];
+        return null;
+    }
+
     public void push(PatientNode node) {
         if (this.size == this.capacity) {
             this.capacity = (this.capacity == 0) ? 10 : this.capacity * 2; 
