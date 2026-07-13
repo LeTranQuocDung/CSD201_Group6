@@ -141,31 +141,25 @@ Search flow xem `HashTable` la lookup chinh cua benh nhan theo ID. `DoublyLinked
 
 ```mermaid
 flowchart TD
-    Start([Start View History])
-    SelectMode{View mode?}
+    A([Start]) --> D[/Call HospitalService.printDiagram/]
 
-    Start --> SelectMode
-    SelectMode -->|Newest first| ReverseList[Load newest history list]
-    SelectMode -->|By status| FilterStatus[Filter history by status]
-    SelectMode -->|By priority| FilterPriority[Filter history by priority]
-    SelectMode -->|Navigate record| CreateNavigator[Create Navigator]
+    D --> F{Is the history list empty?}
 
-    ReverseList --> DisplayList[/Display history list/]
-    FilterStatus --> DisplayList
-    FilterPriority --> DisplayList
+    F -- Yes --> G[/Display empty list message/]
+    F -- No --> H[/Display patient nodes with two-way links/]
 
-    CreateNavigator --> ShowCurrent[/Display current record/]
-    ShowCurrent --> MoveChoice{Next, previous, or stop?}
-    MoveChoice -->|Next| NavNext[Move to next record]
-    MoveChoice -->|Previous| NavPrev[Move to previous record]
-    MoveChoice -->|Stop| ReturnMenu([Return Main Menu])
-    NavNext --> HasRecord{Record exists?}
-    NavPrev --> HasRecord
-    HasRecord -->|Yes| ShowCurrent
-    HasRecord -->|No| EndList[/Show end of list message/]
-    EndList --> ReturnMenu
+    G --> I[/Call HospitalService.printTable/]
+    H --> I
 
-    DisplayList --> ReturnMenu
+    I --> J[/Display medical history table/]
+    J --> K{Are there more patient records?}
+
+    K -- Yes --> L[/Display patient information in the table/]
+    L --> K
+
+    K -- No --> M[/Display total number of patients/]
+    M --> N([End])
+
 ```
 
 Implementation tuong ung: `DoublyLinkedList.toListReverse`, `filterByStatus`, `filterByPriority`, `navigatorFromHead`, `navigatorFromTail`, `Navigator.next` va `Navigator.prev`.
