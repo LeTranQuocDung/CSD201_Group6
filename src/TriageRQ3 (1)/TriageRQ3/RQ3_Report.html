@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RQ3 Report - Smart Hospital Patient Triage System</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+        :root {
+            --primary: #1a365d;
+            --primary-light: #2b6cb0;
+            --accent: #3182ce;
+            --success: #38a169;
+            --warning: #d69e2e;
+            --danger: #e53e3e;
+            --bg: #ffffff;
+            --text: #1a202c;
+            --text-light: #4a5568;
+            --border: #e2e8f0;
+            --code-bg: #f7fafc;
+            --highlight: #ebf8ff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: var(--text);
+            line-height: 1.7;
+            background: var(--bg);
+            font-size: 11pt;
+        }
+
+        @page {
+            size: A4;
+            margin: 20mm 18mm;
+        }
+
+        .page-break { page-break-before: always; }
+
+        /* Cover page */
+        .cover {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 90vh;
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        .cover-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .cover-logo span {
+            font-size: 36px;
+            color: white;
+        }
+
+        .cover h1 {
+            font-size: 28pt;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .cover h2 {
+            font-size: 16pt;
+            font-weight: 400;
+            color: var(--text-light);
+            margin-bottom: 40px;
+        }
+
+        .cover-rq {
+            background: var(--highlight);
+            border-left: 4px solid var(--accent);
+            padding: 20px 28px;
+            border-radius: 0 8px 8px 0;
+            max-width: 600px;
+            text-align: left;
+            margin-bottom: 40px;
+        }
+
+        .cover-rq .label {
+            font-size: 10pt;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .cover-rq p {
+            font-size: 12pt;
+            color: var(--text);
+            font-style: italic;
+        }
+
+        .cover-meta {
+            font-size: 10pt;
+            color: var(--text-light);
+        }
+
+        .cover-meta p { margin: 4px 0; }
+
+        /* Content */
+        .content {
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        h1 {
+            font-size: 20pt;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 30px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid var(--accent);
+        }
+
+        h2 {
+            font-size: 15pt;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 24px 0 12px;
+        }
+
+        h3 {
+            font-size: 12pt;
+            font-weight: 600;
+            color: var(--primary-light);
+            margin: 18px 0 8px;
+        }
+
+        p { margin: 8px 0; }
+
+        ul, ol {
+            margin: 8px 0 8px 24px;
+        }
+
+        li { margin: 4px 0; }
+
+        /* Code blocks */
+        pre {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', 'Consolas', monospace;
+            font-size: 8.5pt;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 12px 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', 'Consolas', monospace;
+            background: var(--code-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 9pt;
+            color: var(--danger);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+
+        .keyword { color: #63b3ed; }
+        .string { color: #68d391; }
+        .comment { color: #718096; font-style: italic; }
+        .number { color: #f6ad55; }
+        .type { color: #b794f4; }
+        .method { color: #fbd38d; }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 10pt;
+        }
+
+        thead th {
+            background: var(--primary);
+            color: white;
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 9pt;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody td {
+            padding: 9px 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tbody tr:nth-child(even) { background: #f7fafc; }
+        tbody tr:hover { background: var(--highlight); }
+
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 8pt;
+            font-weight: 600;
+        }
+
+        .badge-success { background: #c6f6d5; color: #22543d; }
+        .badge-danger { background: #fed7d7; color: #742a2a; }
+        .badge-warning { background: #fefcbf; color: #744210; }
+
+        /* Info boxes */
+        .info-box {
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 14px 0;
+        }
+
+        .info-box.blue {
+            background: #ebf8ff;
+            border-left: 4px solid #3182ce;
+        }
+
+        .info-box.green {
+            background: #f0fff4;
+            border-left: 4px solid #38a169;
+        }
+
+        .info-box.red {
+            background: #fff5f5;
+            border-left: 4px solid #e53e3e;
+        }
+
+        .info-box.yellow {
+            background: #fffff0;
+            border-left: 4px solid #d69e2e;
+        }
+
+        .info-box .title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        /* Diagram */
+        .diagram {
+            background: #f7fafc;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 14px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9pt;
+            line-height: 1.6;
+            white-space: pre;
+            text-align: center;
+        }
+
+        /* Scenario header */
+        .scenario-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 14px 20px;
+            border-radius: 8px;
+            margin: 20px 0 14px;
+        }
+
+        .scenario-header h3 {
+            color: white;
+            margin: 0;
+            font-size: 13pt;
+        }
+
+        .scenario-header p {
+            color: #bee3f8;
+            margin: 4px 0 0;
+            font-size: 10pt;
+        }
+
+        /* File reference */
+        .file-ref {
+            background: #edf2f7;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin: 10px 0;
+            font-size: 10pt;
+        }
+
+        .file-ref .filename {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .file-ref .desc {
+            color: var(--text-light);
+            font-size: 9pt;
+        }
+
+        /* Conclusion box */
+        .conclusion {
+            background: linear-gradient(135deg, #ebf8ff, #e6fffa);
+            border: 2px solid var(--accent);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 20px 0;
+        }
+
+        .conclusion h3 {
+            color: var(--primary);
+            font-size: 14pt;
+            margin-bottom: 12px;
+        }
+
+        /* TOC */
+        .toc {
+            background: #f7fafc;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px 28px;
+            margin: 20px 0;
+        }
+
+        .toc h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        .toc ol {
+            margin-left: 20px;
+        }
+
+        .toc li {
+            margin: 6px 0;
+            color: var(--text);
+        }
+
+        .toc a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .toc a:hover { text-decoration: underline; }
+
+        /* Console output */
+        .console {
+            background: #0d1117;
+            color: #c9d1d9;
+            padding: 18px 20px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8pt;
+            line-height: 1.5;
+            margin: 12px 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            border: 1px solid #30363d;
+        }
+
+        .console .header { color: #58a6ff; font-weight: bold; }
+        .console .success { color: #3fb950; }
+        .console .warn { color: #d29922; }
+        .console .error { color: #f85149; }
+        .console .dim { color: #8b949e; }
+
+        /* Arrow diagram */
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 16px 0;
+            flex-wrap: wrap;
+        }
+
+        .flow-box {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 16px;
+            text-align: center;
+            font-size: 9pt;
+            min-width: 120px;
+        }
+
+        .flow-box.active { border-color: var(--accent); background: var(--highlight); }
+        .flow-box.danger { border-color: var(--danger); background: #fff5f5; }
+
+        .flow-arrow {
+            font-size: 18pt;
+            color: var(--text-light);
+        }
+
+        @media print {
+            .cover { min-height: 100vh; }
+            body { font-size: 10pt; }
+            pre, .console { font-size: 7.5pt; }
+            h1 { font-size: 18pt; }
+            h2 { font-size: 13pt; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ==================== COVER PAGE ==================== -->
+<div class="cover">
+    <div class="cover-logo"><span>🏥</span></div>
+    <h1>Smart Hospital Patient Triage System</h1>
+    <h2>Research Question 3 — Report</h2>
+
+    <div class="cover-rq">
+        <div class="label">Research Question 3</div>
+        <p>Làm thế nào để đo lường tỷ lệ "sai thứ tự triage" (misordering rate) khi so sánh Priority Queue đơn cấp và Priority Queue đa cấp (urgent / semi-urgent / non-urgent) trên cùng một tập 500 ca bệnh mô phỏng?</p>
+    </div>
+
+    <div class="cover-meta">
+        <p><strong>Cấu trúc dữ liệu:</strong> Priority Queue / Min-Heap</p>
+        <p><strong>Ngôn ngữ:</strong> Java</p>
+        <p><strong>Số bệnh nhân mô phỏng:</strong> 500</p>
+    </div>
+</div>
+
+<!-- ==================== TABLE OF CONTENTS ==================== -->
+<div class="page-break"></div>
+<div class="content">
+
+    <div class="toc">
+        <h3>📋 Mục lục</h3>
+        <ol>
+            <li><a href="#sec1">Tổng quan bài toán</a></li>
+            <li><a href="#sec2">Kiến trúc code & Cấu trúc dữ liệu</a></li>
+            <li><a href="#sec3">Giải thích chi tiết từng file code</a></li>
+            <li><a href="#sec4">Cách chương trình hoạt động (Flow)</a></li>
+            <li><a href="#sec5">Kết quả Console — Phân tích chi tiết</a></li>
+            <li><a href="#sec6">Trả lời RQ3</a></li>
+        </ol>
+    </div>
+
+    <!-- ==================== SECTION 1 ==================== -->
+    <h1 id="sec1">1. Tổng quan bài toán</h1>
+
+    <p>Trong phòng cấp cứu (ER), bệnh nhân được phân loại theo mức độ ưu tiên (triage). Có hai cách tổ chức hàng đợi:</p>
+
+    <h3>🔹 Single-Level Priority Queue (PQ đơn cấp)</h3>
+    <p>Tất cả 500 bệnh nhân vào <strong>một hàng đợi duy nhất</strong>, sắp xếp theo priority (1 = khẩn cấp nhất, 10 = ít khẩn cấp nhất). Luôn rút ra bệnh nhân có priority thấp nhất (khẩn cấp nhất).</p>
+
+    <h3>🔹 Multi-Level Priority Queue (PQ đa cấp 3 tier)</h3>
+    <p>Bệnh nhân được chia vào <strong>3 hàng đợi riêng biệt</strong> theo mức độ:</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Tier</th>
+                <th>Tên</th>
+                <th>Priority range</th>
+                <th>Ý nghĩa</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-center">1</td>
+                <td><span class="badge badge-danger">Urgent</span></td>
+                <td class="text-center">1 – 3</td>
+                <td>Cấp cứu ngay (đau tim, chấn thương nặng...)</td>
+            </tr>
+            <tr>
+                <td class="text-center">2</td>
+                <td><span class="badge badge-warning">Semi-Urgent</span></td>
+                <td class="text-center">4 – 6</td>
+                <td>Cần xử lý sớm (gãy tay, sốt cao...)</td>
+            </tr>
+            <tr>
+                <td class="text-center">3</td>
+                <td><span class="badge badge-success">Non-Urgent</span></td>
+                <td class="text-center">7 – 10</td>
+                <td>Không khẩn cấp (cảm cúm, đau nhẹ...)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>Quy tắc: <strong>Rút hết Tier 1</strong> trước khi rút Tier 2, rút hết Tier 2 trước khi rút Tier 3.</p>
+
+    <h3>🔹 Priority Drift là gì?</h3>
+    <div class="info-box yellow">
+        <div class="title">⚡ Priority Drift (Tình trạng thay đổi)</div>
+        <p>Trong thực tế, tình trạng bệnh nhân có thể <strong>xấu đi</strong> khi đang chờ. Ví dụ: bệnh nhân vào với đau bụng nhẹ (p=5, Semi-Urgent), chờ 30 phút → đau dữ dội, nghi viêm ruột thừa (p=2, Urgent).</p>
+        <p>Multi-Level PQ <strong>không tự di chuyển</strong> bệnh nhân sang tier mới → bệnh nhân nặng bị kẹt ở tier cũ → <strong>MISORDERING</strong> (sai thứ tự).</p>
+    </div>
+
+    <!-- ==================== SECTION 2 ==================== -->
+    <div class="page-break"></div>
+    <h1 id="sec2">2. Kiến trúc code & Cấu trúc dữ liệu</h1>
+
+    <h3>📁 Cấu trúc project</h3>
+    <pre><code>TriageRQ3/src/triage/
+├── <span class="type">Patient.java</span>            — Đối tượng bệnh nhân
+├── <span class="type">SingleLevelPQ.java</span>      — PQ đơn cấp (1 heap)
+├── <span class="type">MultiLevelPQ.java</span>       — PQ đa cấp (3 heap)
+├── <span class="type">MisorderingResult.java</span>  — Lưu kết quả đo misordering
+├── <span class="type">TriageSimulator.java</span>    — Logic mô phỏng + đo lường
+└── <span class="type">Main.java</span>               — Entry point, chạy 3 scenario</code></pre>
+
+    <h3>📊 Cấu trúc dữ liệu sử dụng</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Cấu trúc</th>
+                <th>Dùng ở đâu</th>
+                <th>Complexity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>PriorityQueue&lt;Patient&gt;</code> (Min-Heap)</td>
+                <td>SingleLevelPQ (1 heap), MultiLevelPQ (3 heap)</td>
+                <td>Insert O(log n), Extract O(log n)</td>
+            </tr>
+            <tr>
+                <td><code>ArrayList&lt;Patient&gt;</code></td>
+                <td>Lưu danh sách bệnh nhân, ideal order, extraction order</td>
+                <td>Add O(1), Sort O(n log n)</td>
+            </tr>
+            <tr>
+                <td><code>Comparator&lt;Patient&gt;</code></td>
+                <td>So sánh priority để sắp xếp heap và ideal order</td>
+                <td>O(1)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- ==================== SECTION 3 ==================== -->
+    <div class="page-break"></div>
+    <h1 id="sec3">3. Giải thích chi tiết từng file code</h1>
+
+    <!-- Patient.java -->
+    <h2>3.1 Patient.java — Đối tượng bệnh nhân</h2>
+
+    <div class="file-ref">
+        <span class="filename">Patient.java</span> — <span class="desc">Lưu thông tin bệnh nhân: id, tên, priority (1-10), level/tier (1-3)</span>
+    </div>
+
+    <pre><code><span class="keyword">public class</span> <span class="type">Patient</span> {
+    <span class="keyword">private final int</span>    id;
+    <span class="keyword">private final</span> <span class="type">String</span> name;
+    <span class="keyword">private final int</span>    priority;   <span class="comment">// 1-10, actual priority (may be drifted)</span>
+    <span class="keyword">private final int</span>    level;      <span class="comment">// 1/2/3 - tier for PQ routing</span>
+
+    <span class="comment">// Constructor bình thường: level tự phân loại từ priority</span>
+    <span class="keyword">public</span> <span class="method">Patient</span>(<span class="keyword">int</span> id, <span class="type">String</span> name, <span class="keyword">int</span> priority) {
+        <span class="keyword">this</span>.level = <span class="method">classifyLevel</span>(priority);  <span class="comment">// auto-classify</span>
+    }
+
+    <span class="comment">// Drift constructor: priority thay đổi nhưng GIỮ tier cũ</span>
+    <span class="keyword">public</span> <span class="method">Patient</span>(<span class="keyword">int</span> id, <span class="type">String</span> name, <span class="keyword">int</span> priority, <span class="keyword">int</span> originalLevel) {
+        <span class="keyword">this</span>.level = originalLevel;  <span class="comment">// KHÔNG re-classify!</span>
+    }
+
+    <span class="comment">// Phân loại: p 1-3 → Urgent, p 4-6 → Semi-Urgent, p 7-10 → Non-Urgent</span>
+    <span class="keyword">public static int</span> <span class="method">classifyLevel</span>(<span class="keyword">int</span> p) {
+        <span class="keyword">if</span> (p <= <span class="number">3</span>) <span class="keyword">return</span> <span class="number">1</span>;   <span class="comment">// Urgent</span>
+        <span class="keyword">if</span> (p <= <span class="number">6</span>) <span class="keyword">return</span> <span class="number">2</span>;   <span class="comment">// Semi-Urgent</span>
+        <span class="keyword">return</span> <span class="number">3</span>;               <span class="comment">// Non-Urgent</span>
+    }
+}</code></pre>
+
+    <div class="info-box blue">
+        <div class="title">💡 Điểm quan trọng</div>
+        <p><strong>Hai constructor</strong> phục vụ hai mục đích khác nhau:</p>
+        <ul>
+            <li>Constructor bình thường: bệnh nhân mới vào → level auto = <code>classifyLevel(priority)</code></li>
+            <li>Drift constructor: priority đã thay đổi nhưng giữ <code>originalLevel</code> → mô phỏng bệnh nhân bị kẹt ở tier cũ</li>
+        </ul>
+    </div>
+
+    <!-- SingleLevelPQ.java -->
+    <h2>3.2 SingleLevelPQ.java — PQ đơn cấp</h2>
+
+    <div class="file-ref">
+        <span class="filename">SingleLevelPQ.java</span> — <span class="desc">Một Min-Heap duy nhất, luôn extract bệnh nhân khẩn cấp nhất</span>
+    </div>
+
+    <pre><code><span class="keyword">public class</span> <span class="type">SingleLevelPQ</span> {
+    <span class="keyword">private final</span> <span class="type">PriorityQueue</span>&lt;<span class="type">Patient</span>&gt; queue;
+
+    <span class="keyword">public</span> <span class="method">SingleLevelPQ</span>() {
+        <span class="comment">// Sắp xếp theo priority tăng dần (1 = khẩn cấp nhất → ra trước)</span>
+        <span class="keyword">this</span>.queue = <span class="keyword">new</span> <span class="type">PriorityQueue</span>&lt;&gt;((a, b) ->
+            <span class="type">Integer</span>.<span class="method">compare</span>(a.<span class="method">getPriority</span>(), b.<span class="method">getPriority</span>()));
+    }
+
+    <span class="keyword">public void</span> <span class="method">insert</span>(<span class="type">Patient</span> p)   { queue.<span class="method">offer</span>(p); }     <span class="comment">// O(log n)</span>
+    <span class="keyword">public</span> <span class="type">Patient</span> <span class="method">extract</span>()       { <span class="keyword">return</span> queue.<span class="method">poll</span>(); }  <span class="comment">// O(log n)</span>
+}</code></pre>
+
+    <div class="info-box green">
+        <div class="title">✅ Hoạt động</div>
+        <p>Tất cả 500 bệnh nhân vào 1 heap → <code>extract()</code> luôn trả về patient có priority nhỏ nhất (khẩn cấp nhất) → <strong>không bao giờ sai thứ tự</strong>.</p>
+    </div>
+
+    <!-- MultiLevelPQ.java -->
+    <h2>3.3 MultiLevelPQ.java — PQ đa cấp 3 tier</h2>
+
+    <div class="file-ref">
+        <span class="filename">MultiLevelPQ.java</span> — <span class="desc">3 Min-Heap riêng biệt cho 3 mức độ khẩn cấp</span>
+    </div>
+
+    <pre><code><span class="keyword">public class</span> <span class="type">MultiLevelPQ</span> {
+    <span class="keyword">private final</span> <span class="type">PriorityQueue</span>&lt;<span class="type">Patient</span>&gt; urgent;       <span class="comment">// Tier 1: p 1-3</span>
+    <span class="keyword">private final</span> <span class="type">PriorityQueue</span>&lt;<span class="type">Patient</span>&gt; semiUrgent;   <span class="comment">// Tier 2: p 4-6</span>
+    <span class="keyword">private final</span> <span class="type">PriorityQueue</span>&lt;<span class="type">Patient</span>&gt; nonUrgent;    <span class="comment">// Tier 3: p 7-10</span>
+
+    <span class="comment">// INSERT: phân loại vào tier dựa trên level</span>
+    <span class="keyword">public void</span> <span class="method">insert</span>(<span class="type">Patient</span> p) {
+        <span class="keyword">switch</span> (p.<span class="method">getLevel</span>()) {          <span class="comment">// ← dùng level (tier), KHÔNG dùng priority!</span>
+            <span class="keyword">case</span> <span class="number">1</span>: urgent.<span class="method">offer</span>(p);     <span class="keyword">break</span>;
+            <span class="keyword">case</span> <span class="number">2</span>: semiUrgent.<span class="method">offer</span>(p); <span class="keyword">break</span>;
+            <span class="keyword">default</span>: nonUrgent.<span class="method">offer</span>(p); <span class="keyword">break</span>;
+        }
+    }
+
+    <span class="comment">// EXTRACT: rút hết Tier 1 trước, rồi Tier 2, rồi Tier 3</span>
+    <span class="keyword">public</span> <span class="type">Patient</span> <span class="method">extract</span>() {
+        <span class="keyword">if</span> (!urgent.<span class="method">isEmpty</span>())     <span class="keyword">return</span> urgent.<span class="method">poll</span>();
+        <span class="keyword">if</span> (!semiUrgent.<span class="method">isEmpty</span>()) <span class="keyword">return</span> semiUrgent.<span class="method">poll</span>();
+        <span class="keyword">return</span> nonUrgent.<span class="method">poll</span>();
+    }
+}</code></pre>
+
+    <div class="info-box red">
+        <div class="title">⚠️ Vấn đề khi có Priority Drift</div>
+        <p><code>insert()</code> dùng <code>getLevel()</code> để phân tier. Nếu bệnh nhân có drift constructor (level = tier cũ), họ sẽ vào <strong>sai tier</strong>. Ví dụ: priority=2 (Urgent) nhưng level=2 (Semi-Urgent tier) → vào hàng Semi-Urgent!</p>
+    </div>
+
+    <!-- MisorderingResult.java -->
+    <div class="page-break"></div>
+    <h2>3.4 MisorderingResult.java — Lưu kết quả đo</h2>
+
+    <div class="file-ref">
+        <span class="filename">MisorderingResult.java</span> — <span class="desc">Lưu kết quả 1 lần simulation: tổng, số sai, tỷ lệ, phân loại</span>
+    </div>
+
+    <pre><code><span class="keyword">public class</span> <span class="type">MisorderingResult</span> {
+    <span class="keyword">private final</span> <span class="type">String</span> pqName;            <span class="comment">// Tên PQ</span>
+    <span class="keyword">private final int</span>    totalPatients;      <span class="comment">// Tổng bệnh nhân (500)</span>
+    <span class="keyword">private final int</span>    misorderCount;      <span class="comment">// Số lần sai thứ tự</span>
+    <span class="keyword">private final double</span> misorderRate;       <span class="comment">// Tỷ lệ % = count/total * 100</span>
+    <span class="keyword">private final int</span>    urgentMisordered;   <span class="comment">// Bệnh nhân urgent bị phục vụ muộn</span>
+    <span class="keyword">private final int</span>    semiUrgentMisordered; <span class="comment">// Semi-urgent bị phục vụ muộn</span>
+    <span class="keyword">private final</span> <span class="type">List</span>&lt;<span class="type">String</span>&gt; misorderLog; <span class="comment">// Chi tiết từng misordering</span>
+}</code></pre>
+
+    <!-- TriageSimulator.java -->
+    <h2>3.5 TriageSimulator.java — Logic mô phỏng</h2>
+
+    <div class="file-ref">
+        <span class="filename">TriageSimulator.java</span> — <span class="desc">Core: tạo bệnh nhân, áp dụng drift, đo misordering</span>
+    </div>
+
+    <h3>a) Tạo 500 bệnh nhân ngẫu nhiên</h3>
+    <pre><code><span class="comment">// Phân bố thực tế ER:</span>
+<span class="comment">// 20% Urgent (p 1-3), 50% Semi-Urgent (p 4-6), 30% Non-Urgent (p 7-10)</span>
+<span class="keyword">private int</span> <span class="method">randomPriority</span>() {
+    <span class="keyword">double</span> r = random.<span class="method">nextDouble</span>();
+    <span class="keyword">if</span> (r < <span class="number">0.20</span>)  <span class="keyword">return</span> random.<span class="method">nextInt</span>(<span class="number">3</span>) + <span class="number">1</span>;   <span class="comment">// 1, 2, hoặc 3</span>
+    <span class="keyword">if</span> (r < <span class="number">0.70</span>)  <span class="keyword">return</span> random.<span class="method">nextInt</span>(<span class="number">3</span>) + <span class="number">4</span>;   <span class="comment">// 4, 5, hoặc 6</span>
+    <span class="keyword">return</span> random.<span class="method">nextInt</span>(<span class="number">4</span>) + <span class="number">7</span>;               <span class="comment">// 7, 8, 9, hoặc 10</span>
+}</code></pre>
+
+    <h3>b) Áp dụng Priority Drift</h3>
+    <pre><code><span class="keyword">public</span> <span class="type">List</span>&lt;<span class="type">Patient</span>&gt; <span class="method">applyDrift</span>(<span class="type">List</span>&lt;<span class="type">Patient</span>&gt; original,
+                                 <span class="keyword">double</span> driftRate, <span class="keyword">long</span> seed) {
+    <span class="keyword">for</span> (<span class="type">Patient</span> p : original) {
+        <span class="keyword">if</span> (driftRng.<span class="method">nextDouble</span>() < driftRate) {
+            <span class="keyword">int</span> drift = driftRng.<span class="method">nextInt</span>(<span class="number">3</span>) + <span class="number">1</span>;  <span class="comment">// giảm 1-3 điểm</span>
+            <span class="keyword">int</span> newP  = Math.<span class="method">max</span>(<span class="number">1</span>, p.<span class="method">getPriority</span>() - drift);
+            <span class="comment">// Dùng drift constructor: GIỮ NGUYÊN level/tier cũ!</span>
+            drifted.<span class="method">add</span>(<span class="keyword">new</span> <span class="type">Patient</span>(p.<span class="method">getId</span>(), p.<span class="method">getName</span>(), newP, p.<span class="method">getLevel</span>()));
+        } <span class="keyword">else</span> {
+            drifted.<span class="method">add</span>(p);  <span class="comment">// không thay đổi</span>
+        }
+    }
+}</code></pre>
+
+    <div class="info-box blue">
+        <div class="title">💡 Tại sao giữ tier cũ?</div>
+        <p>Mô phỏng thực tế: khi bệnh nhân đã được xếp vào hàng đợi Semi-Urgent, nếu tình trạng xấu đi, Multi-Level PQ <strong>không tự động chuyển</strong> họ sang hàng Urgent. Bệnh nhân <strong>kẹt ở tier cũ</strong>.</p>
+    </div>
+
+    <h3>c) Đo Misordering — Thuật toán cốt lõi</h3>
+    <pre><code><span class="keyword">private</span> <span class="type">MisorderingResult</span> <span class="method">measureMisordering</span>(<span class="type">String</span> pqName,
+        <span class="type">List</span>&lt;<span class="type">Patient</span>&gt; allPatients, <span class="type">List</span>&lt;<span class="type">Patient</span>&gt; extractionOrder) {
+
+    <span class="comment">// Bước 1: Tạo ideal order (sorted theo priority tăng dần)</span>
+    <span class="type">List</span>&lt;<span class="type">Patient</span>&gt; idealOrder = <span class="keyword">new</span> <span class="type">ArrayList</span>&lt;&gt;(allPatients);
+    idealOrder.<span class="method">sort</span>((a, b) -> <span class="type">Integer</span>.<span class="method">compare</span>(a.<span class="method">getPriority</span>(), b.<span class="method">getPriority</span>()));
+
+    <span class="comment">// Bước 2: So sánh từng vị trí</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < size; i++) {
+        <span class="type">Patient</span> actual = extractionOrder.<span class="method">get</span>(i);  <span class="comment">// PQ rút ra</span>
+        <span class="type">Patient</span> ideal  = idealOrder.<span class="method">get</span>(i);       <span class="comment">// lẽ ra phải là</span>
+
+        <span class="comment">// Nếu actual priority > ideal priority → SAI THỨ TỰ!</span>
+        <span class="keyword">if</span> (actual.<span class="method">getPriority</span>() > ideal.<span class="method">getPriority</span>()) {
+            misorderCount++;
+        }
+    }
+}</code></pre>
+
+    <div class="info-box green">
+        <div class="title">📐 Công thức đo misordering rate</div>
+        <p style="font-size: 13pt; text-align: center; margin: 10px 0;">
+            <strong>misordering rate = (misorderCount / totalPatients) × 100%</strong>
+        </p>
+        <p><strong>Ideal order</strong> = danh sách 500 bệnh nhân sorted theo actual priority (tăng dần).</p>
+        <p><strong>Extraction order</strong> = thứ tự thực tế mà PQ rút ra bệnh nhân.</p>
+        <p>So sánh từng vị trí: nếu PQ rút ra bệnh nhân có priority <strong>cao hơn</strong> (ít khẩn cấp hơn) so với ideal → đó là 1 misordering.</p>
+    </div>
+
+    <!-- Main.java -->
+    <div class="page-break"></div>
+    <h2>3.6 Main.java — Chạy 3 kịch bản</h2>
+
+    <div class="file-ref">
+        <span class="filename">Main.java</span> — <span class="desc">Entry point: chạy 3 scenario với drift rate khác nhau</span>
+    </div>
+
+    <pre><code><span class="comment">// Scenario A: Không drift (baseline)</span>
+<span class="method">runScenario</span>(sim, patients, <span class="number">0.0</span>,  <span class="number">100L</span>);
+
+<span class="comment">// Scenario B: 15% drift (phòng cấp cứu bình thường)</span>
+<span class="method">runScenario</span>(sim, patients, <span class="number">0.15</span>, <span class="number">200L</span>);
+
+<span class="comment">// Scenario C: 30% drift (phòng cấp cứu quá tải)</span>
+<span class="method">runScenario</span>(sim, patients, <span class="number">0.30</span>, <span class="number">300L</span>);</code></pre>
+
+    <p>Mỗi scenario:</p>
+    <ol>
+        <li>Áp dụng drift 1 lần → tạo ra <strong>cùng tập drifted patients</strong></li>
+        <li>Chạy cả 2 PQ trên cùng tập đó → <strong>so sánh công bằng</strong></li>
+        <li>Đo misordering cho từng PQ → in kết quả</li>
+    </ol>
+
+    <!-- ==================== SECTION 4 ==================== -->
+    <h1 id="sec4">4. Cách chương trình hoạt động (Flow)</h1>
+
+    <h3>Flow tổng quát</h3>
+    <div class="diagram">┌──────────────────┐
+│  Generate 500    │
+│  Patients        │
+│  (seed=42)       │
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
+│  Scenario A      │     │  Scenario B      │     │  Scenario C      │
+│  drift = 0%      │     │  drift = 15%     │     │  drift = 30%     │
+└────────┬─────────┘     └────────┬─────────┘     └────────┬─────────┘
+         │                        │                        │
+         ▼                        ▼                        ▼
+┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
+│  applyDrift()    │     │  applyDrift()    │     │  applyDrift()    │
+│  0 patients      │     │  72 patients     │     │  152 patients    │
+│  changed         │     │  changed         │     │  changed         │
+└────────┬─────────┘     └────────┬─────────┘     └────────┬─────────┘
+         │                        │                        │
+    ┌────┴────┐              ┌────┴────┐              ┌────┴────┐
+    ▼         ▼              ▼         ▼              ▼         ▼
+┌───────┐ ┌───────┐    ┌───────┐ ┌───────┐    ┌───────┐ ┌───────┐
+│Single │ │Multi  │    │Single │ │Multi  │    │Single │ │Multi  │
+│Level  │ │Level  │    │Level  │ │Level  │    │Level  │ │Level  │
+│PQ     │ │PQ     │    │PQ     │ │PQ     │    │PQ     │ │PQ     │
+└───┬───┘ └───┬───┘    └───┬───┘ └───┬───┘    └───┬───┘ └───┬───┘
+    │         │            │         │            │         │
+    ▼         ▼            ▼         ▼            ▼         ▼
+  0.0%      0.0%         0.0%      6.0%        0.0%      8.4%</div>
+
+    <h3>Misordering xảy ra như thế nào?</h3>
+
+    <div class="diagram">                  MULTI-LEVEL PQ — Ví dụ misordering
+
+Ban đầu:  Patient 433 vào với p=5 → Tier 2 (Semi-Urgent)
+Drift:    Tình trạng xấu đi → p=1 (Urgent) NHƯNG vẫn ở Tier 2!
+
+    ┌─ Tier 1 (Urgent) ──────────────────────┐
+    │  p=1, p=1, p=2, p=2, p=3, p=3, ...    │  ← Rút hết tier này TRƯỚC
+    └────────────────────────────────────────┘
+
+    ┌─ Tier 2 (Semi-Urgent) ─────────────────┐
+    │  ★Patient 433 (p=1)★, p=4, p=5, p=6   │  ← Patient 433 BỊ KẸT ở đây!
+    └────────────────────────────────────────┘      Phải chờ Tier 1 rút hết
+
+    ┌─ Tier 3 (Non-Urgent) ──────────────────┐
+    │  p=7, p=8, p=9, p=10                   │
+    └────────────────────────────────────────┘
+
+→ Patient 433 có p=1 (khẩn cấp NHẤT) nhưng bị phục vụ SAU tất cả Tier 1!
+→ ĐÓ LÀ MISORDERING!</div>
+
+    <!-- ==================== SECTION 5 ==================== -->
+    <div class="page-break"></div>
+    <h1 id="sec5">5. Kết quả Console — Phân tích chi tiết</h1>
+
+    <!-- Dataset -->
+    <h2>5.1 Patient Dataset</h2>
+    <div class="console"><span class="header">--- Patient Dataset ---</span>
+Patient distribution (n=500):
+  Urgent      (p 1-3 ):  90 patients (18.0%)
+  Semi-Urgent (p 4-6 ): 266 patients (53.2%)
+  Non-Urgent  (p 7-10): 144 patients (28.8%)</div>
+
+    <p><strong>Giải thích:</strong> 500 bệnh nhân được tạo ngẫu nhiên (seed=42, đảm bảo reproducible). Phân bố gần đúng target: 20% Urgent, 50% Semi-Urgent, 30% Non-Urgent — mô phỏng ER thực tế nơi đa số bệnh nhân là semi-urgent.</p>
+
+    <!-- Scenario A -->
+    <div class="scenario-header">
+        <h3>📋 SCENARIO A: No priority drift (baseline)</h3>
+        <p>Tình trạng bệnh nhân không thay đổi — điều kiện lý tưởng</p>
+    </div>
+
+    <div class="console"><span class="dim">  Patients drifted: 0/500 | Cross-tier drifts: 0</span>
+
+<span class="header">Single-Level PQ:</span>
+  Single-Level PQ: <span class="success">0/500 misordered (0.0%)</span> | Urgent late: 0 | Semi-Urgent late: 0
+
+<span class="header">Multi-Level PQ:</span>
+  Multi-Level PQ (3-tier): <span class="success">0/500 misordered (0.0%)</span> | Urgent late: 0 | Semi-Urgent late: 0
+
+  Difference: Multi-Level has <span class="success">0</span> more misorderings than Single-Level.</div>
+
+    <div class="info-box green">
+        <div class="title">✅ Phân tích Scenario A</div>
+        <ul>
+            <li><strong>0 bệnh nhân drift</strong> → tất cả giữ nguyên priority ban đầu</li>
+            <li><strong>Single-Level PQ</strong>: 1 heap, luôn extract min → đúng 100%</li>
+            <li><strong>Multi-Level PQ</strong>: mỗi tier đúng priority, extract tier theo thứ tự → đúng 100%</li>
+            <li><strong>Kết luận</strong>: Khi không có drift, cả hai PQ hoạt động hoàn hảo</li>
+        </ul>
+    </div>
+
+    <!-- Scenario B -->
+    <div class="scenario-header">
+        <h3>📋 SCENARIO B: 15% priority drift (realistic ER)</h3>
+        <p>15% bệnh nhân tình trạng xấu đi — phòng cấp cứu bình thường</p>
+    </div>
+
+    <div class="console"><span class="dim">  Patients drifted: 72/500 | Cross-tier drifts: 37</span>
+
+<span class="header">Single-Level PQ:</span>
+  Single-Level PQ: <span class="success">0/500 misordered (0.0%)</span> | Urgent late: 0 | Semi-Urgent late: 0
+
+<span class="header">Multi-Level PQ:</span>
+  Multi-Level PQ (3-tier): <span class="error">30/500 misordered (6.0%)</span> | Urgent late: 21 | Semi-Urgent late: 9
+  Sample misorderings (first 5):
+<span class="warn">  Position  40: served Patient{id=315, p=2, Urgent}
+                but ideal was Patient{id=410, p=1, Urgent}</span>
+<span class="warn">  Position  43: served Patient{id=486, p=2, Urgent}
+                but ideal was Patient{id=433, p=1, Urgent, stuck in Semi-Urgent tier}</span>
+
+  Difference: Multi-Level has <span class="error">30</span> more misorderings than Single-Level.</div>
+
+    <div class="info-box red">
+        <div class="title">⚠️ Phân tích Scenario B — Kết quả quan trọng nhất</div>
+        <ul>
+            <li><strong>72/500 bệnh nhân</strong> (14.4%) có tình trạng xấu đi</li>
+            <li><strong>37 bệnh nhân</strong> vượt ranh giới tier (ví dụ: Semi-Urgent → priority trở thành Urgent nhưng vẫn kẹt ở tier Semi-Urgent)</li>
+            <li><strong>Single-Level PQ = 0%</strong>: 1 heap duy nhất, luôn extract globally minimum → đúng bất kể drift</li>
+            <li><strong>Multi-Level PQ = 6.0%</strong> (30/500): 21 bệnh nhân urgent bị phục vụ muộn, 9 semi-urgent bị muộn</li>
+        </ul>
+        <p><strong>Ví dụ cụ thể</strong>: Position 43 — PQ rút Patient 486 (p=2) nhưng Patient 433 (p=1, khẩn cấp hơn) đang <strong>kẹt ở tier Semi-Urgent</strong> vì ban đầu được phân loại là semi-urgent, sau đó tình trạng xấu đi thành p=1 nhưng PQ không di chuyển.</p>
+    </div>
+
+    <!-- Scenario C -->
+    <div class="scenario-header">
+        <h3>📋 SCENARIO C: 30% priority drift (high-stress ER)</h3>
+        <p>30% bệnh nhân tình trạng xấu đi — phòng cấp cứu quá tải</p>
+    </div>
+
+    <div class="console"><span class="dim">  Patients drifted: 152/500 | Cross-tier drifts: 86</span>
+
+<span class="header">Single-Level PQ:</span>
+  Single-Level PQ: <span class="success">0/500 misordered (0.0%)</span> | Urgent late: 0 | Semi-Urgent late: 0
+
+<span class="header">Multi-Level PQ:</span>
+  Multi-Level PQ (3-tier): <span class="error">42/500 misordered (8.4%)</span> | Urgent late: 23 | Semi-Urgent late: 19
+  Sample misorderings (first 5):
+<span class="warn">  Position  51: served Patient{id=152, p=2, Urgent}
+                but ideal was Patient{id=385, p=1, Urgent}</span>
+<span class="warn">  Position  52: served Patient{id=428, p=2, Urgent}
+                but ideal was Patient{id=399, p=1, Urgent, stuck in Semi-Urgent tier}</span>
+
+  Difference: Multi-Level has <span class="error">42</span> more misorderings than Single-Level.</div>
+
+    <div class="info-box red">
+        <div class="title">⚠️ Phân tích Scenario C</div>
+        <ul>
+            <li><strong>152/500</strong> (30.4%) bệnh nhân drift, <strong>86</strong> vượt ranh giới tier</li>
+            <li>Misordering tăng từ 6.0% → <strong>8.4%</strong> (tăng 40%)</li>
+            <li>Urgent late: 21 → 23, Semi-Urgent late: 9 → <strong>19</strong> (tăng gấp đôi)</li>
+            <li><strong>Kết luận</strong>: Drift rate càng cao → misordering rate càng cao</li>
+        </ul>
+    </div>
+
+    <!-- Summary Table -->
+    <div class="page-break"></div>
+    <h2>5.2 Bảng tổng hợp kết quả</h2>
+
+    <div class="console"><span class="header">=================================================
+  FINAL SUMMARY TABLE
+=================================================</span>
+Scenario / PQ Type           Total   Misordered   Rate(%)  Urgent Late
+----------------------------------------------------------------------
+A-No drift Single              500            0      0.0%            0
+A-No drift Multi               500            0      0.0%            0
+B-15% drift Single             500            0      0.0%            0
+<span class="error">B-15% drift Multi              500           30      6.0%           21</span>
+C-30% drift Single             500            0      0.0%            0
+<span class="error">C-30% drift Multi              500           42      8.4%           23</span></div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Kịch bản</th>
+                <th>PQ Type</th>
+                <th class="text-center">Total</th>
+                <th class="text-center">Misordered</th>
+                <th class="text-center">Rate (%)</th>
+                <th class="text-center">Urgent Late</th>
+                <th class="text-center">Semi-Urgent Late</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan="2">A — No drift</td>
+                <td>Single-Level PQ</td>
+                <td class="text-center">500</td>
+                <td class="text-center"><span class="badge badge-success">0</span></td>
+                <td class="text-center"><strong>0.0%</strong></td>
+                <td class="text-center">0</td>
+                <td class="text-center">0</td>
+            </tr>
+            <tr>
+                <td>Multi-Level PQ</td>
+                <td class="text-center">500</td>
+                <td class="text-center"><span class="badge badge-success">0</span></td>
+                <td class="text-center"><strong>0.0%</strong></td>
+                <td class="text-center">0</td>
+                <td class="text-center">0</td>
+            </tr>
+            <tr>
+                <td rowspan="2">B — 15% drift</td>
+                <td>Single-Level PQ</td>
+                <td class="text-center">500</td>
+                <td class="text-center"><span class="badge badge-success">0</span></td>
+                <td class="text-center"><strong>0.0%</strong></td>
+                <td class="text-center">0</td>
+                <td class="text-center">0</td>
+            </tr>
+            <tr>
+                <td>Multi-Level PQ</td>
+                <td class="text-center">500</td>
+                <td class="text-center"><span class="badge badge-danger">30</span></td>
+                <td class="text-center"><strong>6.0%</strong></td>
+                <td class="text-center">21</td>
+                <td class="text-center">9</td>
+            </tr>
+            <tr>
+                <td rowspan="2">C — 30% drift</td>
+                <td>Single-Level PQ</td>
+                <td class="text-center">500</td>
+                <td class="text-center"><span class="badge badge-success">0</span></td>
+                <td class="text-center"><strong>0.0%</strong></td>
+                <td class="text-center">0</td>
+                <td class="text-center">0</td>
+            </tr>
+            <tr>
+                <td>Multi-Level PQ</td>
+                <td class="text-center">500</td>
+                <td class="text-center"><span class="badge badge-danger">42</span></td>
+                <td class="text-center"><strong>8.4%</strong></td>
+                <td class="text-center">23</td>
+                <td class="text-center">19</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- ==================== SECTION 6 ==================== -->
+    <div class="page-break"></div>
+    <h1 id="sec6">6. Trả lời Research Question 3</h1>
+
+    <div class="cover-rq" style="margin-bottom: 20px;">
+        <div class="label">RQ3</div>
+        <p>Làm thế nào để đo lường tỷ lệ "sai thứ tự triage" (misordering rate) khi so sánh Priority Queue đơn cấp và Priority Queue đa cấp (urgent / semi-urgent / non-urgent) trên cùng một tập 500 ca bệnh mô phỏng?</p>
+    </div>
+
+    <h2>6.1 Phương pháp đo lường Misordering Rate</h2>
+
+    <ol>
+        <li><strong>Tạo tập dữ liệu:</strong> 500 bệnh nhân ngẫu nhiên (seed cố định để reproducible) với phân bố thực tế: 20% Urgent (p=1-3), 50% Semi-Urgent (p=4-6), 30% Non-Urgent (p=7-10)</li>
+        <li><strong>Mô phỏng priority drift:</strong> Một tỷ lệ bệnh nhân (0%, 15%, 30%) có tình trạng xấu đi (priority giảm 1-3 điểm) SAU KHI đã được phân loại vào tier</li>
+        <li><strong>Tạo ideal order:</strong> Sắp xếp tất cả 500 bệnh nhân theo actual priority tăng dần — đây là thứ tự <em>lý tưởng</em></li>
+        <li><strong>Extract từ PQ:</strong> Rút lần lượt bệnh nhân ra khỏi PQ → tạo extraction order</li>
+        <li><strong>So sánh:</strong> Tại mỗi vị trí <code>i</code>, nếu <code>actual[i].priority > ideal[i].priority</code> → đó là 1 <strong>misordering</strong></li>
+        <li><strong>Tính tỷ lệ:</strong> <code>misordering rate = misorderCount / 500 × 100%</code></li>
+    </ol>
+
+    <h2>6.2 Kết quả so sánh</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>PQ Type</th>
+                <th class="text-center">No Drift (0%)</th>
+                <th class="text-center">15% Drift</th>
+                <th class="text-center">30% Drift</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Single-Level PQ</strong></td>
+                <td class="text-center"><span class="badge badge-success">0.0%</span></td>
+                <td class="text-center"><span class="badge badge-success">0.0%</span></td>
+                <td class="text-center"><span class="badge badge-success">0.0%</span></td>
+            </tr>
+            <tr>
+                <td><strong>Multi-Level PQ (3-tier)</strong></td>
+                <td class="text-center"><span class="badge badge-success">0.0%</span></td>
+                <td class="text-center"><span class="badge badge-danger">6.0%</span></td>
+                <td class="text-center"><span class="badge badge-danger">8.4%</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>6.3 Phân tích kết quả</h2>
+
+    <h3>Single-Level PQ — Luôn chính xác (0%)</h3>
+    <ul>
+        <li>Sử dụng <strong>1 Min-Heap duy nhất</strong> cho tất cả bệnh nhân</li>
+        <li><code>extract()</code> luôn trả về bệnh nhân có <strong>globally minimum priority</strong></li>
+        <li>Không phụ thuộc vào tier/level → priority drift không ảnh hưởng</li>
+        <li>Complexity: Insert O(log n), Extract O(log n)</li>
+    </ul>
+
+    <h3>Multi-Level PQ — Misordering khi có drift (6-8.4%)</h3>
+    <ul>
+        <li>Sử dụng <strong>3 Min-Heap riêng biệt</strong> cho 3 tier</li>
+        <li>Luôn rút hết Tier 1 trước → Tier 2 → Tier 3</li>
+        <li>Khi bệnh nhân drift (tình trạng xấu đi), họ <strong>không được chuyển tier</strong></li>
+        <li>Bệnh nhân thực sự urgent nhưng kẹt ở Semi-Urgent tier → bị phục vụ sau tất cả bệnh nhân Urgent tier</li>
+        <li><strong>21-23 bệnh nhân urgent</strong> bị phục vụ muộn — đây là rủi ro y tế nghiêm trọng</li>
+    </ul>
+
+    <h2>6.4 Kết luận</h2>
+
+    <div class="conclusion">
+        <h3>📌 Kết luận RQ3</h3>
+
+        <p><strong>Phương pháp đo:</strong> Misordering rate được đo bằng cách so sánh thứ tự extraction thực tế của PQ với ideal order (sorted theo actual priority), đếm số vị trí mà bệnh nhân ít khẩn cấp hơn được phục vụ trước bệnh nhân khẩn cấp hơn.</p>
+
+        <p><strong>Kết quả:</strong></p>
+        <ul>
+            <li><strong>Single-Level PQ</strong> có misordering rate = <strong>0%</strong> ở mọi mức drift — luôn extract globally minimum priority, không bị ảnh hưởng bởi priority drift.</li>
+            <li><strong>Multi-Level PQ (3-tier)</strong> có misordering rate = <strong>6.0%</strong> (15% drift) đến <strong>8.4%</strong> (30% drift) — misorderings xảy ra khi tình trạng bệnh nhân thay đổi sau khi đã được phân loại vào tier.</li>
+        </ul>
+
+        <p><strong>Trade-off:</strong> Single-Level PQ chính xác hơn về mặt thứ tự, nhưng Multi-Level PQ vẫn có giá trị thực tiễn vì:</p>
+        <ul>
+            <li>Cho phép bác sĩ <strong>batch-process theo nhóm severity</strong> (xử lý tất cả urgent trước, rồi semi-urgent)</li>
+            <li>Giảm <strong>cognitive load</strong> cho nhân viên y tế</li>
+            <li>Misordering rate 6-8.4% là <strong>chấp nhận được</strong> nếu có cơ chế re-triage định kỳ</li>
+        </ul>
+
+        <p><strong>Khuyến nghị:</strong> Nếu sử dụng Multi-Level PQ, cần bổ sung cơ chế <strong>re-triage định kỳ</strong> (kiểm tra lại tình trạng bệnh nhân đang chờ) để giảm misordering rate.</p>
+    </div>
+
+</div>
+
+</body>
+</html>

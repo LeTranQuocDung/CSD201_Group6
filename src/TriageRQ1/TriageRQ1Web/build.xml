@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="TriageRQ1Web" default="dist" basedir=".">
+    <description>RQ1 - Smart Hospital Patient Triage System - Web Application</description>
+
+    <!-- ===== Properties ===== -->
+    <property environment="env"/>
+    <property name="tomcat.home" value="${env.CATALINA_HOME}"/>
+    <property name="src.dir" value="src/java"/>
+    <property name="web.dir" value="web"/>
+    <property name="build.dir" value="build"/>
+    <property name="build.classes" value="${build.dir}/WEB-INF/classes"/>
+    <property name="dist.dir" value="dist"/>
+    <property name="war.name" value="TriageRQ1Web.war"/>
+
+    <!-- ===== Init ===== -->
+    <target name="init">
+        <mkdir dir="${build.classes}"/>
+        <mkdir dir="${dist.dir}"/>
+    </target>
+
+    <!-- ===== Compile Java sources ===== -->
+    <target name="compile" depends="init"
+            description="Compile Java source files">
+        <javac srcdir="${src.dir}" destdir="${build.classes}"
+               source="1.8" target="1.8"
+               includeantruntime="false"
+               encoding="UTF-8"
+               debug="true">
+        </javac>
+    </target>
+
+    <!-- ===== Build WAR ===== -->
+    <target name="dist" depends="compile"
+            description="Build WAR file for deployment">
+        <!-- Copy web content to build dir -->
+        <copy todir="${build.dir}">
+            <fileset dir="${web.dir}"/>
+        </copy>
+        <!-- Create WAR -->
+        <war destfile="${dist.dir}/${war.name}"
+             basedir="${build.dir}"
+             webxml="${build.dir}/WEB-INF/web.xml"/>
+        <echo message="WAR created: ${dist.dir}/${war.name}"/>
+    </target>
+
+    <!-- ===== Deploy to Tomcat ===== -->
+    <target name="deploy" depends="dist"
+            description="Deploy WAR to Tomcat webapps">
+        <copy file="${dist.dir}/${war.name}"
+              todir="${tomcat.home}/webapps"
+              overwrite="true"/>
+        <echo message="Deployed to: ${tomcat.home}/webapps/${war.name}"/>
+        <echo message="Open: http://localhost:8080/TriageRQ1Web/"/>
+    </target>
+
+    <!-- ===== Clean ===== -->
+    <target name="clean"
+            description="Clean build and dist directories">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+    </target>
+</project>

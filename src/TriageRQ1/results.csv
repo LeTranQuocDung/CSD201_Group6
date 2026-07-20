@@ -1,0 +1,13 @@
+Structure,DataSize,AvgInsert(ms),MaxInsert(ms),AvgExtract(ms),MaxExtract(ms),InsertVio>50ms,ExtractVio>50ms
+Min-Heap,50,0,0009,0,0586,0,0003,0,0103,0,0
+Min-Heap,200,0,0002,0,0020,0,0001,0,0077,0,0
+Min-Heap,500,0,0002,0,0121,0,0001,0,0038,0,0
+Min-Heap,1000,0,0002,0,0024,0,0003,0,0751,0,0
+Sorted Linked List,50,0,0004,0,0131,0,0001,0,0308,0,0
+Sorted Linked List,200,0,0004,0,0082,0,0001,0,0019,0,0
+Sorted Linked List,500,0,0016,0,0338,0,0001,0,0054,0,0
+Sorted Linked List,1000,0,0025,0,1132,0,0001,0,0032,0,0
+Unsorted Array,50,0,0004,0,1498,0,0014,0,0231,0,0
+Unsorted Array,200,0,0002,0,0042,0,0049,0,0506,0,0
+Unsorted Array,500,0,0001,0,0074,0,0011,0,0031,0,0
+Unsorted Array,1000,0,0003,0,0487,0,0026,0,0298,0,0
